@@ -129,8 +129,8 @@ function handleProjectiles() {
 const defender1 = new Image();
 defender1.src = './assets/plant.png';
 
-const defender2 = new Image();
-defender2.src = 'plant_2.png';
+// const defender2 = new Image();
+// defender2.src = 'plant_2.png';
 
 class Defender {
     constructor(x, y) {
@@ -220,7 +220,7 @@ function chooseDefender() {
     ctx.fillRect(card1.x, card1.y, card1.width, card1.height);
     ctx.drawImage(defender1, 0, 0, 170, 243, 15, 15, 170 / 3, 243 / 4);
     ctx.fillRect(card2.x, card2.y, card2.width, card2.height);
-    ctx.drawImage(defender2, 0, 0, 334, 243, 95, 15, 334 / 3, 243 / 4);
+    // ctx.drawImage(defender2, 0, 0, 334, 243, 95, 15, 334 / 3, 243 / 4);
 }
 
 //floating  Messages for example when you don't have enough resources
