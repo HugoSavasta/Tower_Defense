@@ -125,12 +125,7 @@ function handleProjectiles() {
     }
 };
 
-// defenders revoir pour faire des anims ici gla flemme a voir a la fin
-const defender1 = new Image();
-defender1.src = './assets/plant.png';
 
-// const defender2 = new Image();
-// defender2.src = 'plant_2.png';
 
 class Defender {
     constructor(x, y) {
@@ -263,19 +258,8 @@ function handleFloatingMessages() {
 }
 
 
-// enemies a revoir et finir pour les ennemis
-const enemyTypes = [];
-const enemy1 = new Image();
-enemy1.src = './assets/zombie.png';
-enemyTypes.push(enemy1);
-
-//test de mettre differents ennemis ca me brise faut trouver un site bene pour dl des trucs
-const enemy2 = new Image();
-enemy2.src = './assets/plant.png';
-enemyTypes.push(enemy2);
-
 class Enemy {
-    constructor(verticalPosition) {
+    constructor(verticalPosition, enemyTypes) {
         this.x = canvas.width;
         this.y = verticalPosition;
         this.width = cellSize - cellGap * 2;
@@ -314,7 +298,7 @@ class Enemy {
     }
 }
 
-function handleEnemies() {
+function handleEnemies(enemyTypes) {
     for (let i = 0; i < enemies.length; i++) {
         enemies[i].update();
         enemies[i].draw();
@@ -338,7 +322,7 @@ function handleEnemies() {
     }
     if (frame % enemiesInterval === 0 && score < winningScore) {
         let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
-        enemies.push(new Enemy(verticalPosition));
+        enemies.push(new Enemy(verticalPosition, enemyTypes));
         enemyPositions.push(verticalPosition);
         if (enemiesInterval > 120) enemiesInterval -= 50;
         console.log(enemyPositions);
@@ -417,7 +401,7 @@ canvas.addEventListener('click', function() {
     }
 });
 
-function animate() {
+function animate(enemyTypes) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'red';
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height);
@@ -425,15 +409,13 @@ function animate() {
     handleDefenders();
     handleResources();
     handleProjectiles();
-    handleEnemies();
+    handleEnemies(enemyTypes);
     chooseDefender(); //a revoir petit bug de ses morts les putes
     handleGameStatus();
     handleFloatingMessages();
     frame++;
     if(!gameOver) requestAnimationFrame(animate);
 }
-
-animate();
 
 
 function collision(first, second) {
@@ -448,4 +430,27 @@ function collision(first, second) {
 
 window.addEventListener('resize', function () {
     canvasPosition = canvas.getBoundingClientRect();
+});
+
+window.addEventListener("load", async () => {
+    // Define a function to load an image with a given source
+    const loadImage = (src) => {
+        return new Promise((resolve, reject) => {
+            const image = new Image();
+            image.onload = () => resolve(image);
+            image.onerror = reject;
+            image.src = src;
+        });
+    };
+
+    // Load all images asynchronously
+    const defender1 = await loadImage('./assets/plant.png');
+    
+    const enemy1 = await loadImage('./assets/zombie.png');
+    const enemy2 = await loadImage('./assets/plant.png');
+
+    const enemyTypes = [enemy1, enemy2];
+
+    // Call the animate function after all images are loaded
+    animate(enemyTypes);
 });
