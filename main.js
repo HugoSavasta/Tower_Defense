@@ -210,7 +210,7 @@ const card2 = {
     height: 85,
 };
 
-function chooseDefender() {
+function chooseDefender(defender1) {
     ctx.lineWidth = 1;
     ctx.fillRect(card1.x, card1.y, card1.width, card1.height);
     ctx.drawImage(defender1, 0, 0, 170, 243, 15, 15, 170 / 3, 243 / 4);
@@ -401,7 +401,7 @@ canvas.addEventListener('click', function() {
     }
 });
 
-function animate(enemyTypes) {
+function animate(enemyTypes, defender1) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'red';
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height);
@@ -410,7 +410,7 @@ function animate(enemyTypes) {
     handleResources();
     handleProjectiles();
     handleEnemies(enemyTypes);
-    chooseDefender(); //a revoir petit bug de ses morts les putes
+    chooseDefender(defender1); //a revoir petit bug de ses morts les putes
     handleGameStatus();
     handleFloatingMessages();
     frame++;
@@ -452,5 +452,5 @@ window.addEventListener("load", async () => {
     const enemyTypes = [enemy1, enemy2];
 
     // Call the animate function after all images are loaded
-    animate(enemyTypes);
+    animate(enemyTypes, defender1);
 });
