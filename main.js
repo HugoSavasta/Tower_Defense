@@ -1,3 +1,29 @@
+const enemyTypes = []
+let defender1
+
+window.addEventListener("load", async () => {
+    // Define a function to load an image with a given source
+    const loadImage = (src) => {
+        return new Promise((resolve, reject) => {
+            const image = new Image();
+            image.onload = () => resolve(image);
+            image.onerror = reject;
+            image.src = src;
+        });
+    };
+
+    // Load all images asynchronously
+    defender1 = await loadImage('./assets/plant.png');
+    
+    const enemy1 = await loadImage('./assets/zombie.png');
+    const enemy2 = await loadImage('./assets/plant.png');
+    enemyTypes.push(enemy1)
+    enemyTypes.push(enemy2)
+
+    // Call the animate function after all images are loaded
+    animate();
+});
+
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
 
@@ -401,7 +427,7 @@ canvas.addEventListener('click', function() {
     }
 });
 
-function animate(enemyTypes, defender1) {
+function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'red';
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height);
@@ -430,27 +456,4 @@ function collision(first, second) {
 
 window.addEventListener('resize', function () {
     canvasPosition = canvas.getBoundingClientRect();
-});
-
-window.addEventListener("load", async () => {
-    // Define a function to load an image with a given source
-    const loadImage = (src) => {
-        return new Promise((resolve, reject) => {
-            const image = new Image();
-            image.onload = () => resolve(image);
-            image.onerror = reject;
-            image.src = src;
-        });
-    };
-
-    // Load all images asynchronously
-    const defender1 = await loadImage('./assets/plant.png');
-    
-    const enemy1 = await loadImage('./assets/zombie.png');
-    const enemy2 = await loadImage('./assets/plant.png');
-
-    const enemyTypes = [enemy1, enemy2];
-
-    // Call the animate function after all images are loaded
-    animate(enemyTypes, defender1);
 });
