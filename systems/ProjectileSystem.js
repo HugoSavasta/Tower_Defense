@@ -5,7 +5,7 @@ class ProjectileSystem extends System {
         super();
     }
     
-    update() {
+    update(delta) {
         this.frame++;
         this.entities.forEach(entity => {
             const positionComponent = entity.getComponent("PositionComponent");
@@ -14,8 +14,8 @@ class ProjectileSystem extends System {
            if (projectileComponent && positionComponent) {
                 const velocityComponent = entity.getComponent("VelocityComponent");
                 if (this.frame % 3 === 0) {
-                    positionComponent.x += velocityComponent.x;
-                    positionComponent.y += velocityComponent.y;
+                    positionComponent.x += velocityComponent.x * delta;
+                    positionComponent.y += velocityComponent.y * delta;
                 }
             }
 

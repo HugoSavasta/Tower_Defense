@@ -85,15 +85,15 @@ function createZomby(x, y) {
     zomby.addComponent(new ContextComponent(ctx));
     zomby.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     zomby.addComponent(new PositionComponent(x, y));
-    zomby.addComponent(new VelocityComponent(-0.004, 0));
+    zomby.addComponent(new VelocityComponent(-0.4, 0));
     zomby.addComponent(new HealthComponent(100));
     zomby.addComponent(new AnimationComponent(0, 0, 0, 1, 292, 410));
     zomby.addComponent(new CollisionComponent(2, false));
     //added shoot builder component
     cellCollisionSystem.addEntity(zomby);
     zombySystem.addEntity(zomby);
+    projectileSystem.addEntity(zomby);
     viewSystem.addEntity(zomby);
-
 }
 
 
@@ -175,11 +175,11 @@ function animate(currentTime) {
     ctx.fillStyle = 'red';
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height);
     viewSystem.render(delta_time_multiplier);
-    if (frame % enemiesInterval === 0) {
+   
+    if (frame % enemiesInterval === 0 && projectileCollisionSystem.entities.size > 0) {
         let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
-        createZomby(700, verticalPosition);
+        createZomby(800, verticalPosition);
         if (enemiesInterval > 120) enemiesInterval -= 50;
-
     }
     cellCollisionSystem.applyOnMouse(
         mouse.getComponent("PositionComponent").x,
@@ -187,11 +187,12 @@ function animate(currentTime) {
         mouse.getComponent("SizeComponent").width,
         mouse.getComponent("SizeComponent").height
     );
-    zombySystem.update();
-    shootSystem.update();
-    projectileSystem.update();
-    projectileCollisionSystem.update();
-  
+    zombySystem.update(delta_time_multiplier);
+    if(zombySystem.entities.size > 0){
+        shootSystem.update(delta_time_multiplier);
+        projectileSystem.update(delta_time_multiplier);
+        projectileCollisionSystem.update();
+    }
     requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);

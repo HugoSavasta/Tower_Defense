@@ -19,7 +19,7 @@ class ViewSystem extends System {
             const healthComponent = entity.getComponent("HealthComponent");
             const projectileComponent = entity.getComponent("ProjectileComponent");
         
-            // draw collision
+            // draw collision cell
             if(colorComponent && collisionComponent && collisionComponent.collide && !projectileComponent){
               
                 contextComponent.context.strokeStyle = colorComponent.color;
@@ -71,13 +71,6 @@ class ViewSystem extends System {
                 }
 
             }
-            else if(entity.name === "DefenderShoot" && projectileComponent && positionComponent){
-              
-                contextComponent.context.fillStyle = 'black';
-                contextComponent.context.beginPath();
-                contextComponent.context.arc(positionComponent.x, positionComponent.y, 10, 0, Math.PI * 2);
-                contextComponent.context.fill();
-            }
             // draw sprite with animation
             else if (animationComponent && positionComponent && imageComponent && sizeComponent) {
 
@@ -106,9 +99,12 @@ class ViewSystem extends System {
                         animationComponent.spriteWidth, animationComponent.spriteHeight, 
                         positionComponent.x, positionComponent.y, sizeComponent.width, 
                     sizeComponent.height);
-             
-                    if (animationComponent.frameX < animationComponent.maxFrame) animationComponent.frameX++;
-                    else animationComponent.frameX = animationComponent.minFrame;
+                    if (this.frame % 30 === 0) { // change the number for more or less speed
+                        if (animationComponent.frameX < animationComponent.maxFrame) {
+                            animationComponent.frameX++;
+                        }
+                        else animationComponent.frameX = animationComponent.minFrame;
+                    }
                 }
             }
         });
