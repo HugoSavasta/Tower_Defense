@@ -1,9 +1,4 @@
 import { observer } from "../Observable.js";
-function gameOver() {
-    return { gameOver: true };
-} 
-
-observer.subscribe(gameOver);
 
 function ZombyCollisionSystem (entities, delta, frame) {
         entities.forEach(entity => {
@@ -20,7 +15,7 @@ function ZombyCollisionSystem (entities, delta, frame) {
                             positionComponent.x + sizeComponent.width < 80
                     )
                     ) {
-                        gameOver();
+                        observer.notify("Game Over");
                 }
 
                 entities.forEach(entity2 => {
@@ -39,8 +34,7 @@ function ZombyCollisionSystem (entities, delta, frame) {
                           ){
                      
                             if(healthComponent2.health <= 0){
-                                if( entities.size > 0 
-                                        && entities.has(entity2.id)){
+                                if( entities.has(entity2.id) ){
                                    
                                      entities.delete(entity2.id);
                                 }

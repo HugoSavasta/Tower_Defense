@@ -1,3 +1,4 @@
+import { observer } from "../Observable.js";
 function ProjectileCollisionSystem(entities, delta, frame) {
 
         entities.forEach(entity => {
@@ -15,7 +16,7 @@ function ProjectileCollisionSystem(entities, delta, frame) {
                         ) {
                      
                             entities.delete(entity.id);
-              
+                            
                     }         
                 }
                      
@@ -42,11 +43,12 @@ function ProjectileCollisionSystem(entities, delta, frame) {
                                 if( entities.size > 0 
                                         && entities.has(entity2.id)){
                                     entities.delete(entity2.id);
+                                    observer.notify(false, 1);
                                 }
                                
                             }
                         
-                            // healthComponent.health -= 25;
+                            healthComponent.health -= 15;
                             entities.delete(entity.id);
                         }
                     }   

@@ -11,8 +11,8 @@ class Observable {
       this.observers = this.observers.filter((observer) => observer !== func);
     }
   
-    notify() {
-      this.observers.forEach((observer) => observer.call());
+    notify(data) {
+      this.observers.forEach((observer) => observer(data));
     }
 }
 

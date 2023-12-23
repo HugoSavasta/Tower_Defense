@@ -11,7 +11,8 @@ import ProjectileComponent from "../components/ProjectileComponent.js";
 function ShootSystem(entities, delta, frame) {
     entities.forEach(entity => {
         if (entity.name === "Defender") {
-            if(frame % 100 === 0){
+            const animationComponent = entity.getComponent("AnimationComponent");
+            if(frame % animationComponent.frameSpeed === 0){
                 const positionComponent = entity.getComponent("PositionComponent");
                 const projectile = new Entity("Projectile");
                 projectile.addComponent(new ContextComponent(ctx));

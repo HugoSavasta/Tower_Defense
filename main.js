@@ -74,7 +74,7 @@ function createDefender(x, y) {
     defender.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     defender.addComponent(new PositionComponent(x, y));
     defender.addComponent(new HealthComponent(100));
-    defender.addComponent(new AnimationComponent(0, 0, 0, 1, 167, 243));
+    defender.addComponent(new AnimationComponent(0, 0, 0, 1, 167, 243, 30));
     defender.addComponent(new CollisionComponent(2, false));
     defender.addComponent(new ShootComponent(true));
       //added shoot builder component
@@ -84,21 +84,21 @@ function createDefender(x, y) {
 
  
 
-    console.log("Defender created at " + x + " " + y);
+    observer.notify("Defender created at " + x + " " + y);
 }
 
 
 function createZomby(x, y) {
     
     const zomby = new Entity("Zomby");
-    zomby.addComponent(new AnimationComponent(0, 0, 0, 7, 167, 243));
     zomby.addComponent(new ContextComponent(ctx, "assets/zombie.png"));
     zomby.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     zomby.addComponent(new PositionComponent(x, y));
     let randomSpeed = Math.floor(Math.random() * 5 + 1)
     zomby.addComponent(new VelocityComponent(-randomSpeed, 0));
-    zomby.addComponent(new HealthComponent(100));
-    zomby.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410));
+    let randomHealth = Math.floor(Math.random() * 500 + 100)
+    zomby.addComponent(new HealthComponent(randomHealth));
+    zomby.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410, 30));
     zomby.addComponent(new CollisionComponent(2, false));
     //added shoot builder component
     entities.set(zomby.id, zomby);
@@ -118,6 +118,13 @@ canvas.addEventListener('mouseleave', function () {
     mouse.getComponent("PositionComponent").x = undefined;
     mouse.getComponent("PositionComponent").y = undefined;
 });
+
+document.addEventListener('keydown', (event) => {
+    if (event.code === "Space") {
+        observer.notify('Space key pressed');
+    }
+});
+  
 
 
 class FloatingMessage {
@@ -157,15 +164,18 @@ function handleFloatingMessages() {
     }
 }
 
-function handleGameStatus() {
+function handleGameStatus(gaOv) {
     ctx.fillStyle = 'gold';
     ctx.font = '30px Orbitron';
     ctx.fillText('Score: ' + score, 200, 40);
     ctx.fillText('Resources: ' + numberOfResources, 200, 80);
-    if (gameOver) {
-        ctx.fillStyle = 'black';
+    if (gaOv) {
+        ctx.fillStyle = 'blue';
         ctx.font = '90px Orbitron';
-        ctx.fillText('GAME OVER', 135, 330);
+        ctx.fillText('GAME OVER!', 135, 330);
+        ctx.font = '45px Orbitron';
+        ctx.fillText('\n\nPress Space to Restart', 135, 430);
+        gameOver = gaOv;
     }
 
     if (score >= winningScore) {
@@ -176,6 +186,17 @@ function handleGameStatus() {
         ctx.fillText('You win with ' + score + ' points!', 134, 340);
     }
 }
+observer.subscribe((data) => {
+    if(data){
+       if(data === "Game Over"){
+         handleGameStatus(true);
+       }
+       if(data === "Space key pressed"){
+              resetGame();
+       }
+    }
+});
+
 
 canvas.addEventListener('click', function() {
     const pos = mouse.getComponent("PositionComponent")
@@ -233,6 +254,23 @@ for (let y = cellSize; y < canvas.height; y += cellSize) {
         entities.set(cell.id, cell);
     }
 }
+
+
+function resetGame() {
+    if(gameOver){
+        score = 0;
+        gameOver = false;
+        numberOfResources = 300000;
+        entities.forEach(entity => {
+            if(entity.name !== "Cell" && entity.name !== "Mouse" 
+            && entity.name !== "Choose_plant_1" && entity.name !== "Choose_plant_2"){
+                entities.delete(entity.id);
+            }
+        });
+        observer.notify("Game Reset");  
+        requestAnimationFrame(animate);
+     }
+}
 const controlsBar = {
   width: canvas.width,
   height: cellSize,
@@ -249,6 +287,7 @@ function animate(currentTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.fillStyle = 'red';
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height);
+
 
     if (frame % enemiesInterval === 0 && entities.size > 0) {
         let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
@@ -274,8 +313,11 @@ function animate(currentTime) {
     drawPath()
     handleFloatingMessages();
     handleGameStatus();
-    requestAnimationFrame(animate);
-    observer.notify();
+  
+    
+    if(!gameOver){
+        requestAnimationFrame(animate);
+    }
 }
 requestAnimationFrame(animate);
 
