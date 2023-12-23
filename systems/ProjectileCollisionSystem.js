@@ -47,8 +47,6 @@ function ProjectileCollisionSystem(entities, delta, frame) {
                             }
                         
                             healthComponent.health -= 50;
-                            console.log("collided");
-                        
                             entities.delete(entity.id);
                         }
                     }   

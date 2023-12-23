@@ -129,7 +129,24 @@ canvas.addEventListener('click', function() {
     // }
 });
 
+const pathPoints = [
+    { x: 100, y: 100 },
+    { x: 200, y: 100 },
+    { x: 200, y: 300 },
+    { x: 300, y: 300 },
+    // Ajoutez autant de points que nécessaire pour définir votre chemin
+  ];
 
+function drawPath() {
+    ctx.beginPath();
+    ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
+    for (let i = 1; i < pathPoints.length; i++) {
+      ctx.lineTo(pathPoints[i].x, pathPoints[i].y);
+    }
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 5;
+    ctx.stroke();
+  }
 
 for (let y = cellSize; y < canvas.height; y += cellSize) {
     for (let x = 0; x < canvas.width; x += cellSize) {
@@ -164,6 +181,7 @@ let delta_time = 0;
 
 function animate(currentTime) {
     frame++;
+ 
     delta_time = currentTime - previousTime;
     delta_time_multiplier = delta_time / frame_interval;  
     previousTime = currentTime;
@@ -192,7 +210,8 @@ function animate(currentTime) {
     }
  
  
-
+    drawPath()
+    console.log(entities.size);
     requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);
