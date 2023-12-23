@@ -43,7 +43,7 @@ function ProjectileCollisionSystem(entities, delta, frame) {
                                 if( entities.size > 0 
                                         && entities.has(entity2.id)){
                                     entities.delete(entity2.id);
-                                    observer.notify(false, 1);
+                                    observer.notify("Scored");
                                 }
                                
                             }

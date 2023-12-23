@@ -36,6 +36,7 @@ const canvas = document.getElementById("canvas");
 canvas.width = 900;
 canvas.height = 600;
 
+let level = 1;
 let score = 0;
 let gameOver = false;
 let winningScore = 50;
@@ -43,6 +44,7 @@ const cellSize = 100;
 const cellGap = 3;
 let numberOfResources = 300000;
 const floatingMessages = [];
+const resources = [];
 let frame = 0
 let enemiesInterval = 400
 
@@ -186,13 +188,36 @@ function handleGameStatus(gaOv) {
         ctx.fillText('You win with ' + score + ' points!', 134, 340);
     }
 }
+
+const amounts = [20, 30, 40];
+class Resource {
+    constructor() {
+        this.x = Math.random() * (canvas.width - cellSize);
+        this.y = (Math.floor(Math.random() * 5) + 1) * cellSize + 25;
+        this.width = cellSize * 0.6;
+        this.height = cellSize * 0.6;
+        this.amount = amounts[Math.floor(Math.random() * amounts.length)];
+    }
+    
+    draw() {
+        ctx.fillStyle = 'yellow';
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.fillStyle = 'black';
+        ctx.font = '20px Orbitron';
+        ctx.fillText(this.amount, this.x + 15, this.y + 32);
+    }
+}
+
 observer.subscribe((data) => {
     if(data){
        if(data === "Game Over"){
          handleGameStatus(true);
        }
-       if(data === "Space key pressed"){
-              resetGame();
+       else if(data === "Space key pressed"){
+              resetGame(level);
+       }
+       else if(data === "Scored"){
+        score++;
        }
     }
 });
@@ -256,7 +281,7 @@ for (let y = cellSize; y < canvas.height; y += cellSize) {
 }
 
 
-function resetGame() {
+function resetGame(level) {
     if(gameOver){
         score = 0;
         gameOver = false;
@@ -265,11 +290,13 @@ function resetGame() {
             if(entity.name !== "Cell" && entity.name !== "Mouse" 
             && entity.name !== "Choose_plant_1" && entity.name !== "Choose_plant_2"){
                 entities.delete(entity.id);
+            }else{
+                level++;
             }
         });
         observer.notify("Game Reset");  
         requestAnimationFrame(animate);
-     }
+    }
 }
 const controlsBar = {
   width: canvas.width,
@@ -288,8 +315,7 @@ function animate(currentTime) {
     ctx.fillStyle = 'red';
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height);
 
-
-    if (frame % enemiesInterval === 0 && entities.size > 0) {
+    if (entities.size > 47 && frame % enemiesInterval === 0 && entities.size > 0) {
         let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
         createZomby(800, verticalPosition);
         if (enemiesInterval > 120) enemiesInterval -= 50;
@@ -310,10 +336,10 @@ function animate(currentTime) {
     }
  
 
-    drawPath()
+    drawPath();
     handleFloatingMessages();
     handleGameStatus();
-  
+
     
     if(!gameOver){
         requestAnimationFrame(animate);
