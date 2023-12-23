@@ -11,7 +11,7 @@ import ProjectileComponent from "../components/ProjectileComponent.js";
 function ShootSystem(entities, delta, frame) {
     entities.forEach(entity => {
         if (entity.name === "Defender") {
-            if(frame % 150 === 0){
+            if(frame % 100 === 0){
                 const positionComponent = entity.getComponent("PositionComponent");
                 const projectile = new Entity("Projectile");
                 projectile.addComponent(new ContextComponent(ctx));
@@ -21,7 +21,7 @@ function ShootSystem(entities, delta, frame) {
                 projectile.addComponent(new PositionComponent(positionComponent.x+50, 
                     positionComponent.y+50));
                 projectile.addComponent(new CollisionComponent(3, false));
-                projectile.addComponent(new VelocityComponent(2, 0));
+                projectile.addComponent(new VelocityComponent(5, 0));
                 projectile.addComponent(new ProjectileComponent());
                 entities.set(projectile.id, projectile);
             }

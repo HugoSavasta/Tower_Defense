@@ -9,7 +9,6 @@ import ContextComponent from "./components/ContextComponent.js";
 import HealthComponent from "./components/HealthComponent.js";
 import ShootComponent from "./components/ShootComponent.js";
 import VelocityComponent from "./components/VelocityComponent.js";
-import ProjectileComponent from "./components/ProjectileComponent.js";
 
 
 import ApplyOnClickSystem from "./systems/ApplyOnClickSystem.js";
@@ -62,8 +61,9 @@ function createDefender(x, y) {
     defender.addComponent(new AnimationComponent(0, 0, 0, 1, 167, 243));
     defender.addComponent(new CollisionComponent(2, false));
     defender.addComponent(new ShootComponent(true));
+      //added shoot builder component
     defender.getComponent("ShootComponent").setShootNow(true).build()
-    //added shoot builder component
+  
     entities.set(defender.id, defender);
 
  
@@ -211,7 +211,6 @@ function animate(currentTime) {
  
  
     drawPath()
-    console.log(entities.size);
     requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);
