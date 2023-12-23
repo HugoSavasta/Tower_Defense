@@ -1,28 +1,22 @@
-import System from './System.js';
-
-class ProjectileSystem extends System {
-    constructor() {
-        super();
-    }
-    
-    update(delta) {
-        this.frame++;
-        this.entities.forEach(entity => {
+function ProjectileSystem(entities, delta, frame) {
+        entities.forEach(entity => {
             const positionComponent = entity.getComponent("PositionComponent");
             const projectileComponent = entity.getComponent("ProjectileComponent");
-           
-           if (projectileComponent && positionComponent) {
-                const velocityComponent = entity.getComponent("VelocityComponent");
-                if (this.frame % 3 === 0) {
+            const velocityComponent = entity.getComponent("VelocityComponent");
+       
+           if (projectileComponent && positionComponent && velocityComponent) {
+      
+                if (frame % 3 === 0) {
                     positionComponent.x += velocityComponent.x * delta;
                     positionComponent.y += velocityComponent.y * delta;
+                    positionComponent.old_x = positionComponent.x;
+                    positionComponent.old_y = positionComponent.y;
+   
                 }
             }
-
         });
     }
 
     
-}
 
 export default ProjectileSystem;

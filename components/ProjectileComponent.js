@@ -1,7 +1,5 @@
-import Component from './Component.js';
-class ProjectileComponent extends Component {
-    constructor(type = 0) {
-        super();
+class ProjectileComponent {
+    constructor(type) {
         this.type = type;
     }
 }

@@ -1,23 +1,14 @@
-import System from './System.js';
+function ZombySystem (entities, delta, frame) {
 
-class ZombySystem extends System {
-    constructor() {
-        super();
-    }
+        entities.forEach(entity => {
     
-    update(delta) {
-        this.frame++;
-        
-        this.entities.forEach(entity => {
             const positionComponent = entity.getComponent("PositionComponent");
-      
-           if (positionComponent) {
-                const velocityComponent = entity.getComponent("VelocityComponent");
-                if (this.frame % 3 === 0) {
-                    positionComponent.x += velocityComponent.x * delta;
-                    positionComponent.y += velocityComponent.y * delta;
-                   
-                } 
+            const velocityComponent = entity.getComponent("VelocityComponent");
+           if (positionComponent && velocityComponent) {
+               
+        
+                positionComponent.x += velocityComponent.x * delta;
+                positionComponent.y += velocityComponent.y * delta;
           
             }
 
@@ -25,6 +16,6 @@ class ZombySystem extends System {
     }
 
     
-}
+
 
 export default ZombySystem;

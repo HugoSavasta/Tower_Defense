@@ -1,22 +1,34 @@
-import System from './System.js';
+import {ctx} from "../utils.js";
+import Entity from "../Entity.js";
+import PositionComponent from "../components/PositionComponent.js";
+import CollisionComponent from "../components/CollisionComponent.js";
+import ColorComponent from "../components/ColorComponent.js";
+import SizeComponent from "../components/SizeComponent.js";
+import ContextComponent from "../components/ContextComponent.js";
+import VelocityComponent from "../components/VelocityComponent.js";
 import ProjectileComponent from "../components/ProjectileComponent.js";
 
-class ShootSystem extends System {
-    constructor() {
-        super();
-    }
-    
-    update() {
-        this.frame++;
-        this.entities.forEach(entity => {
-            const shootComponent = entity.getComponent("ShootComponent");
-           if (shootComponent) {
-                entity.addComponent(new ProjectileComponent());
+function ShootSystem(entities, delta, frame) {
+    entities.forEach(entity => {
+        if (entity.name === "Defender") {
+            if(frame % 150 === 0){
+                const positionComponent = entity.getComponent("PositionComponent");
+                const projectile = new Entity("Projectile");
+                projectile.addComponent(new ContextComponent(ctx));
+                projectile.addComponent(new ColorComponent("black"));
+               
+                projectile.addComponent(new SizeComponent(1, 1));
+                projectile.addComponent(new PositionComponent(positionComponent.x+50, 
+                    positionComponent.y+50));
+                projectile.addComponent(new CollisionComponent(3, false));
+                projectile.addComponent(new VelocityComponent(2, 0));
+                projectile.addComponent(new ProjectileComponent());
+                entities.set(projectile.id, projectile);
             }
-        });
-    }
-
-
+        }
+    });
 }
+
+
 
 export default ShootSystem;
