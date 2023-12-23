@@ -19,6 +19,7 @@ import ViewSystem from "./systems/ViewSystem.js";
 import ZombySystem from "./systems/ZombySystem.js";
 import ZombyCollisionSystem from "./systems/ZombyCollisionSystem.js";
 import ShootSystem from "./systems/ShootSystem.js";
+import { observer } from "./Observable.js";
 
 const systems = [
     ShootSystem,
@@ -35,7 +36,22 @@ const canvas = document.getElementById("canvas");
 canvas.width = 900;
 canvas.height = 600;
 
+let score = 0;
+let gameOver = false;
+let winningScore = 50;
+const cellSize = 100;
+const cellGap = 3;
+let numberOfResources = 300000;
+const floatingMessages = [];
+let frame = 0
+let enemiesInterval = 400
 
+let frames_per_second = 60;
+let previousTime = performance.now();
+
+let frame_interval = 1000 / frames_per_second;
+let delta_time_multiplier = 1;
+let delta_time = 0;
 
 
 const plant = new Entity("Choose_plant_1");
@@ -79,7 +95,8 @@ function createZomby(x, y) {
     zomby.addComponent(new ContextComponent(ctx, "assets/zombie.png"));
     zomby.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     zomby.addComponent(new PositionComponent(x, y));
-    zomby.addComponent(new VelocityComponent(-4, 0));
+    let randomSpeed = Math.floor(Math.random() * 5 + 1)
+    zomby.addComponent(new VelocityComponent(-randomSpeed, 0));
     zomby.addComponent(new HealthComponent(100));
     zomby.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410));
     zomby.addComponent(new CollisionComponent(2, false));
@@ -102,31 +119,88 @@ canvas.addEventListener('mouseleave', function () {
     mouse.getComponent("PositionComponent").y = undefined;
 });
 
-const cellSize = 100;
-const cellGap = 3;
+
+class FloatingMessage {
+    constructor(value, x, y, size, color) {
+        this.value = value;
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.lifeSpan = 0;
+        this.color = color;
+        this.opacity = 1;
+    }
+    
+    update() {
+        this.y -= 0.3;
+        this.lifeSpan += 1;
+        if (this.opacity > 0.03) this.opacity -= 0.01;
+    }
+    
+    draw() {
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+        ctx.font = this.size + 'px Orbitron';
+        ctx.fillText(this.value, this.x, this.y);
+        ctx.globalAlpha = 1;
+    }
+}
+
+function handleFloatingMessages() {
+    for (let i = 0; i < floatingMessages.length; i++) {
+        floatingMessages[i].update();
+        floatingMessages[i].draw();
+        if (floatingMessages[i].lifeSpan >= 50) {
+            floatingMessages.splice(i, 1);
+            i--;
+        }
+    }
+}
+
+function handleGameStatus() {
+    ctx.fillStyle = 'gold';
+    ctx.font = '30px Orbitron';
+    ctx.fillText('Score: ' + score, 200, 40);
+    ctx.fillText('Resources: ' + numberOfResources, 200, 80);
+    if (gameOver) {
+        ctx.fillStyle = 'black';
+        ctx.font = '90px Orbitron';
+        ctx.fillText('GAME OVER', 135, 330);
+    }
+
+    if (score >= winningScore) {
+        ctx.fillStyle = 'black';
+        ctx.font = '60px Orbitron';
+        ctx.fillText('LEVEL COMPLETE', 130, 300);
+        ctx.font = '30px Orbitron';
+        ctx.fillText('You win with ' + score + ' points!', 134, 340);
+    }
+}
+
 canvas.addEventListener('click', function() {
-    const gridPositionX = mouse.getComponent("PositionComponent").x - (mouse.getComponent("PositionComponent").x % cellSize) + cellGap;
-    const gridPositionY = mouse.getComponent("PositionComponent").y - (mouse.getComponent("PositionComponent").y % cellSize) + cellGap;
+    const pos = mouse.getComponent("PositionComponent")
+    const gridPositionX = pos.x - (pos.x % cellSize) + cellGap;
+    const gridPositionY = pos.y - (pos.y % cellSize) + cellGap;
     if (gridPositionY < cellSize) return;
     if(!ApplyOnClickSystem(
         entities,
-        mouse.getComponent("PositionComponent").x,
-        mouse.getComponent("PositionComponent").y, 
+        pos.x,
+        pos.y, 
         mouse.getComponent("SizeComponent").width,
         mouse.getComponent("SizeComponent").height
     )){
-        createDefender(gridPositionX, gridPositionY);
+       
+        let defenderCost = 100;
+        if (numberOfResources >= defenderCost) {
+            createDefender(gridPositionX, gridPositionY);
+            numberOfResources -= defenderCost;
+        } else {
+            floatingMessages.push(new FloatingMessage('Need more resources',
+             pos.x, pos.y, 20, 'red'));
+        }
     }else{
-        console.log("Cell is occupied");
+        floatingMessages.push(new FloatingMessage('Cell is occupied', pos.x, pos.y, 20, 'red'));
     }
-   
-    // let defenderCost = 100;
-    // if (numberOfResources >= defenderCost) {
-    //     defenders.push(new Defender(gridPositionX, gridPositionY));
-    //     numberOfResources -= defenderCost;
-    // } else {
-    //     floatingMessages.push(new FloatingMessage('need more resources', mouse.x, mouse.y, 20, 'red'));
-    // }
 });
 
 const pathPoints = [
@@ -153,12 +227,7 @@ for (let y = cellSize; y < canvas.height; y += cellSize) {
         const cell = new Entity("Cell")
         cell.addComponent(new SizeComponent(cellSize - cellGap * 1, cellSize - cellGap * 1));
         cell.addComponent(new ContextComponent(ctx));
-        if(Math.random() > 0.9) {
-            cell.addComponent(new ColorComponent("black"));
-        }else{
-            cell.addComponent(new ColorComponent("green"));
-        }
-       
+        cell.addComponent(new ColorComponent("black"));
         cell.addComponent(new PositionComponent(x, y));
         cell.addComponent(new CollisionComponent(1, false));
         entities.set(cell.id, cell);
@@ -169,15 +238,7 @@ const controlsBar = {
   height: cellSize,
 };
 
-let frame = 0
-let enemiesInterval = 600
 
-let frames_per_second = 60;
-let previousTime = performance.now();
-
-let frame_interval = 1000 / frames_per_second;
-let delta_time_multiplier = 1;
-let delta_time = 0;
 
 function animate(currentTime) {
     frame++;
@@ -209,12 +270,14 @@ function animate(currentTime) {
       
     }
  
- 
+
     drawPath()
+    handleFloatingMessages();
+    handleGameStatus();
     requestAnimationFrame(animate);
+    observer.notify();
 }
 requestAnimationFrame(animate);
-
 
 let canvasPosition = canvas.getBoundingClientRect();
 window.addEventListener('resize', function () {

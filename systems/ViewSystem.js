@@ -15,14 +15,14 @@ function ViewSystem(entities, delta, frame) {
 
             if(colorComponent && collisionComponent && collisionComponent.collide && !projectileComponent){
               
-                contextComponent.context.strokeStyle = colorComponent.color;
-                contextComponent.context.lineWidth = 1;
-                contextComponent.context.strokeRect(
-                    positionComponent.x, 
-                    positionComponent.y, 
-                    sizeComponent.width, 
-                    sizeComponent.height
-                );
+                // contextComponent.context.strokeStyle = colorComponent.color;
+                // contextComponent.context.lineWidth = 1;
+                // contextComponent.context.strokeRect(
+                //     positionComponent.x, 
+                //     positionComponent.y, 
+                //     sizeComponent.width, 
+                //     sizeComponent.height
+                // );
             }
 
             if(colorComponent && entity.name !== "Projectile" ){

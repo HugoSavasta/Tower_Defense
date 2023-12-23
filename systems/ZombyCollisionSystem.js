@@ -1,18 +1,26 @@
+import { observer } from "../Observable.js";
+function gameOver() {
+    return { gameOver: true };
+} 
+
+observer.subscribe(gameOver);
 
 function ZombyCollisionSystem (entities, delta, frame) {
         entities.forEach(entity => {
         const positionComponent = entity.getComponent("PositionComponent");
         const collisionComponent = entity.getComponent("CollisionComponent");
         const sizeComponent = entity.getComponent("SizeComponent");
-          
+        const velocityComponent = entity.getComponent("VelocityComponent");
             if (collisionComponent && entity.name === "Zomby" && sizeComponent) {
+                if(velocityComponent.x === 0){
+                    velocityComponent.x = velocityComponent.old_x;
+                }
                 if ((
 
                             positionComponent.x + sizeComponent.width < 80
                     )
                     ) {
-                      
-                        entities.delete(entity.id);
+                        gameOver();
                 }
 
                 entities.forEach(entity2 => {
@@ -29,21 +37,28 @@ function ZombyCollisionSystem (entities, delta, frame) {
                             positionComponent.y < positionComponent2.y + sizeComponent2.height &&
                             positionComponent.y + sizeComponent.height > positionComponent2.y
                           ){
-                       
+                     
                             if(healthComponent2.health <= 0){
                                 if( entities.size > 0 
                                         && entities.has(entity2.id)){
                                    
                                      entities.delete(entity2.id);
                                 }
+                  
                             }
+                     
                              healthComponent2.health -= 0.5;
+                             if(healthComponent2.health >= 0){
+                                velocityComponent.x = 0;
+                             }
+                           
                         }
+                        
                     }
+                  
                 });
-
+       
             }
-
         });
 }
 
