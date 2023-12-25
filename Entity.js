@@ -1,10 +1,4 @@
-function generateSimpleUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0;
-        const v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-};
+import { generateSimpleUUID } from "../utils.js";
 
 class Entity {
     constructor(name = "") {
@@ -22,14 +16,11 @@ class Entity {
         this.components.set(component.constructor.name, component);
     }
 
-    getComponent(componentName) {
-        if(componentName === "") {
+    getComponent(identifier) {
+        if (identifier === "") {
             return;
         }
-        if(this.components.get(componentName) === undefined) {
-            return;
-        }
-        return this.components.get(componentName);
+        return this.components.get(identifier);
     }
 
     removeComponent(componentName) {
