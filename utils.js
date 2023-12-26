@@ -1,24 +1,24 @@
-const canvas = document.getElementById("canvas");
-canvas.width = 900;
-canvas.height = 600;
+const canvas1 = document.getElementById("canvas");
+canvas1.width = 900;
+canvas1.height = 600;
 
 const canvas2 = document.getElementById("ui");
 canvas2.width = 900;
 canvas2.height = 600;
 
 
-const ctx = canvas.getContext("2d");
+const ctx1 = canvas.getContext("2d");
 const ctx2 = canvas2.getContext("2d");
 
-ctx.webkitImageSmoothingEnabled = false;
-ctx.mozImageSmoothingEnabled = false;
-ctx.imageSmoothingEnabled = false;
+ctx1.webkitImageSmoothingEnabled = false;
+ctx1.mozImageSmoothingEnabled = false;
+ctx1.imageSmoothingEnabled = false;
 
 ctx2.webkitImageSmoothingEnabled = false;
 ctx2.mozImageSmoothingEnabled = false;
 ctx2.imageSmoothingEnabled = false;
 
-export {canvas, canvas2, ctx, ctx2};
+export {canvas1, canvas2, ctx1, ctx2};
 
 
 export class Vector2d {

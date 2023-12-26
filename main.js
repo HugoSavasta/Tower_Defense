@@ -1,4 +1,4 @@
-import {ctx, canvas, ctx2, canvas2} from "./utils.js";
+import {ctx1, canvas1, ctx2, canvas2} from "./utils.js";
 import { observer } from "./Observable.js";
 import { numberOfZombies, setZombies, setResource, decResource, numberOfResources, FloatingMessage, floatingMessages, handleFloatingMessages } from "./utils.js";
 
@@ -17,10 +17,11 @@ import ImageComponent from "./components/ImageComponent.js";
 
 //collisions system
 import MouseCellCollisionSystemSystem from "./systems/collision/MouseCellCollisionSystem.js";
+import MouseChooseDefenderCollisionSystem from "./systems/collision/MouseChooseDefenderCollisionSystem.js";
 import MouseDefenderCollisionSystem from "./systems/collision/MouseDefenderCollisionSystem.js";
 import MouseResouceCollisionSystem from "./systems/collision/MouseResourceCollisionSystem.js";
 import ProjectileBoundaryCollisionSystem from "./systems/collision/ProjectileBoundaryCollisionSystem.js";
-import ProjectileZombieCollisionSystem from "./systems/collision/ProjectileZombieCollisionSystem.js";
+import ZombieProjectileCollisionSystem from "./systems/collision/ZombieProjectileCollisionSystem.js";
 import ZombieBoundaryCollisionSystem from "./systems/collision/ZombieBoundaryCollisionSystem.js";
 import ZombieDefenderCollisionSystem from "./systems/collision/ZombieDefenderCollisionSystem.js";
 
@@ -39,13 +40,14 @@ import ZombieRenderSystem from "./systems/render/ZombieRenderSystem.js";
 // behaviour system
 import ShootSystem from "./systems/behaviours/ShootSystem.js";
 import ZombieLifeSystem from "./systems/behaviours/ZombieLifeSystem.js";
+import DefenderLifeSystem from "./systems/behaviours/DefenderLifeSystem.js";
 
-import GameSystem from "./systems/GameSystem.js";
+// import GameSystem from "./systems/GameSystem.js";
 export const entities = new Map();
 
 const systems = [
     ProjectileBoundaryCollisionSystem,
-    ProjectileZombieCollisionSystem,
+    ZombieProjectileCollisionSystem,
     ZombieBoundaryCollisionSystem,
     ZombieDefenderCollisionSystem,
     ProjectileMovementSystem,
@@ -58,6 +60,7 @@ const systems = [
     ZombieRenderSystem,
     ShootSystem,
     ZombieLifeSystem,
+    DefenderLifeSystem,
 ];
 
 
@@ -84,7 +87,7 @@ let delta_time = 0;
 
 
 const plant = new Entity("Choose_plant_1");
-plant.addComponent(new ContextComponent(ctx));
+plant.addComponent(new ContextComponent(ctx1));
 plant.addComponent(new ImageComponent("assets/plant.png"));
 plant.addComponent(new SizeComponent(70, 85));
 plant.addComponent(new PositionComponent(10, 10));
@@ -92,7 +95,7 @@ entityManager.add(plant);
 entities.set(plant.id, plant);
 
 const plant2 = new Entity("Choose_plant_2");
-plant2.addComponent(new ContextComponent(ctx));
+plant2.addComponent(new ContextComponent(ctx1));
 plant2.addComponent(new ImageComponent("assets/plant.png"));
 plant2.addComponent(new SizeComponent(70, 85));
 plant2.addComponent(new PositionComponent(90, 10));
@@ -104,7 +107,7 @@ function createDefender(x, y) {
     
     const defender = new Entity("Defender");
 
-    defender.addComponent(new ContextComponent(ctx));
+    defender.addComponent(new ContextComponent(ctx1));
     defender.addComponent(new ImageComponent("assets/sunflower_shot.png"));
     defender.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     defender.addComponent(new PositionComponent(x, y));
@@ -126,7 +129,7 @@ function createDefender(x, y) {
 function createZombie(x, y) {
     
     const zombie = new Entity("Zombie");
-    zombie.addComponent(new ContextComponent(ctx));
+    zombie.addComponent(new ContextComponent(ctx1));
     zombie.addComponent(new ImageComponent("assets/zombie.png"));
     zombie.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     zombie.addComponent(new PositionComponent(x, y));
@@ -229,6 +232,7 @@ observer.subscribe((data) => {
 
 canvas2.addEventListener('click', function() {
     const pos = mouse.getComponent("PositionComponent")
+    const size = mouse.getComponent("SizeComponent")
     const gridPositionX = pos.x - (pos.x % cellSize) + cellGap;
     const gridPositionY = pos.y - (pos.y % cellSize) + cellGap;
     if (gridPositionY < cellSize) return;
@@ -242,13 +246,12 @@ canvas2.addEventListener('click', function() {
     // ))
  
     if(!MouseDefenderCollisionSystem(
-        pos.x,
-        pos.y, 
-        mouse.getComponent("SizeComponent").width,
-        mouse.getComponent("SizeComponent").height
+        gridPositionX,
+        gridPositionY, 
+        size.width,
+        size.height
     )) 
     {
-   
         let defenderCost = 100;
         if (numberOfResources >= defenderCost) {
             createDefender(gridPositionX, gridPositionY);
@@ -259,6 +262,22 @@ canvas2.addEventListener('click', function() {
         }
     }else{
         floatingMessages.push(new FloatingMessage('Cell is occupied', pos.x, pos.y, 20, 'red'));
+    }
+});
+
+canvas2.addEventListener('click', function() {
+    const pos = mouse.getComponent("PositionComponent")
+    const size = mouse.getComponent("SizeComponent")
+    const choosedDefender = MouseChooseDefenderCollisionSystem(
+        pos.x,
+        pos.y, 
+        size.width,
+        size.height
+    );
+  
+    if(choosedDefender) 
+    {
+        console.log(choosedDefender);
     }
 });
 
@@ -311,7 +330,7 @@ for (let y = cellSize; y < canvas.height; y += cellSize) {
     for (let x = 0; x < canvas.width; x += cellSize) {
         const cell = new Entity("Cell")
         cell.addComponent(new SizeComponent(cellSize - cellGap * 1, cellSize - cellGap * 1));
-        cell.addComponent(new ContextComponent(ctx));
+        cell.addComponent(new ContextComponent(ctx1));
         cell.addComponent(new PositionComponent(x, y));
         cell.addComponent(new CollisionComponent(1, false));
         entityManager.add(cell);
@@ -322,7 +341,7 @@ for (let y = cellSize; y < canvas.height; y += cellSize) {
 
 function resetGame(level) {
     if(gameOver){
-        enemiesInterval = 200;
+        enemiesInterval = 800;
         score = 0;
         gameOver = false;
         setResource(300);
@@ -347,8 +366,8 @@ const controlsBar = {
 };
 
 
-const generatedPath = generateProceduralPath(1500);
-drawPath(generatedPath);
+// const generatedPath = generateProceduralPath(1500);
+// drawPath(generatedPath);
 
 
 function animate(currentTime) {
@@ -357,19 +376,19 @@ function animate(currentTime) {
     delta_time = currentTime - previousTime;
     delta_time_multiplier = delta_time / frame_interval;  
     previousTime = currentTime;
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx2.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.fillStyle = 'red';
-    ctx.fillRect(0, 0, controlsBar.width, controlsBar.height);
+    ctx1.clearRect(0, 0, canvas1.width, canvas1.height)
+    ctx2.clearRect(0, 0, canvas2.width, canvas2.height)
+    ctx1.fillStyle = 'red';
+    ctx1.fillRect(0, 0, controlsBar.width, controlsBar.height);
   
     if (frame % enemiesInterval === 0) {
        
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 1; i++) {
             let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
                 createZombie(900, verticalPosition);
                 setZombies(1);
         }
-        if (enemiesInterval > 20) enemiesInterval -= 10;
+        // if (enemiesInterval > 20) enemiesInterval -= 10;
     }
 
     if (entityManager.resources.size > 0 && mouse.getComponent("PositionComponent").x && mouse.getComponent("PositionComponent").y){

@@ -1,4 +1,4 @@
-import {ctx} from "../../utils.js";
+import {ctx1} from "../../utils.js";
 import Entity from "../../Entity.js";
 import PositionComponent from "../../components/PositionComponent.js";
 import CollisionComponent from "../../components/CollisionComponent.js";
@@ -25,13 +25,13 @@ function ShootSystem(delta, frame) {
                 directionY /= magnitude;
 
                 const projectile = new Entity("Projectile");
-                projectile.addComponent(new ContextComponent(ctx));               
+                projectile.addComponent(new ContextComponent(ctx1));               
                 projectile.addComponent(new SizeComponent(1, 1));
                 projectile.addComponent(new PositionComponent(positionComponent.x+50, 
                     positionComponent.y+50));
                 projectile.addComponent(new CollisionComponent(3, false));
-                const bulletVelocityX = directionX * 50;
-                const bulletVelocityY = directionY * 50;
+                const bulletVelocityX = directionX * 10;
+                const bulletVelocityY = directionY * 10;
                 projectile.addComponent(new VelocityComponent(bulletVelocityX, bulletVelocityY));
                 projectile.addComponent(new ProjectileComponent());
                 entityManager.add(projectile);
