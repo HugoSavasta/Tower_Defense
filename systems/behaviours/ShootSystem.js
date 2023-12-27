@@ -12,7 +12,7 @@ import {entityManager} from "../../EntityManager.js";
 function ShootSystem(delta, frame) {
     if (entityManager.zombies.size === 0) return;
     let zombie = entityManager.zombies.entries().next().value[1];
-
+    if(zombie === undefined) return;
     entityManager.defenders.forEach(entity => {   
         const shootComponent = entity.getComponent("ShootComponent");
         const dammageComponent = entity.getComponent("DammageComponent");

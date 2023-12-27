@@ -84,7 +84,7 @@ mouse.addComponent(new PositionComponent(0, 0));
 mouse.addComponent(new SizeComponent(0.1, 0.1));
 
 let frame = 0
-let enemiesInterval = 200;
+let enemiesInterval = 800;
 
 let frames_per_second = 60;
 let previousTime = performance.now();
@@ -159,7 +159,6 @@ function createDefender(type, x, y) {
   
     entityManager.add(defender);
 
-    console.log("Defender created at " + x + " " + y);
     observer.notify("Defender created at " + x + " " + y);
 }
 
@@ -177,6 +176,7 @@ function createZombie(x, y) {
     zombie.addComponent(new HealthComponent(randomHealth));
     zombie.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410, 30));
     zombie.addComponent(new CollisionComponent(2, false));
+    zombie.addComponent(new DammageComponent(10));
     //added shoot builder component
     entityManager.add(zombie);
   
@@ -456,32 +456,23 @@ function animate(currentTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     //choose board
-    // ctx.fillStyle = 'red';
-    // ctx.fillRect(0, 0, canvas.width, cellSize)
+    ctx.fillStyle = 'red';
+    ctx.fillRect(0, 0, canvas.width, cellSize)
    
   
     if(choosedDefender.length > 0) 
     {
-        //display rectangle around choosed defender
-
-        const pos = choosedDefender[0].getComponent("PositionComponent");
-        const size = choosedDefender[0].getComponent("SizeComponent");
-        ctx.strokeStyle = 'red';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(pos.x,
-         pos.y, 
-         size.width, 
-         size.height);
-        
+         ChooseDefenderBoarderRenderSystem(choosedDefender[0]);
     }
+    console.log(enemiesInterval);
     if (frame % enemiesInterval === 0) {
        
         for (let i = 0; i < 1; i++) {
             let verticalPosition = Math.floor(Math.random() * 5) * cellSize+cellSize + cellGap;
-                createZombie(900, verticalPosition);
+                createZombie(850, verticalPosition);
                 setZombies(1);
         }
-        // if (enemiesInterval > 20) enemiesInterval -= 10;
+        if (enemiesInterval > 60) enemiesInterval -= 20;
     }
 
     if (entityManager.resources.size > 0 && mouse.getComponent("PositionComponent").x && mouse.getComponent("PositionComponent").y){

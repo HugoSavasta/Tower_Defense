@@ -5,6 +5,7 @@ function ZombieBoundaryCollisionSystem (delta, frame) {
         const positionComponent = entity.getComponent("PositionComponent");
         const sizeComponent = entity.getComponent("SizeComponent");
         const velocityComponent = entity.getComponent("VelocityComponent");
+        const dammageComponent = entity.getComponent("DammageComponent");
         entityManager.defenders.forEach(entity2 => {
                 const healthComponent2 = entity2.getComponent("HealthComponent");
                 const positionComponent2 = entity2.getComponent("PositionComponent");
@@ -20,7 +21,7 @@ function ZombieBoundaryCollisionSystem (delta, frame) {
                         velocityComponent.x = 0;
                         velocityComponent.y = 0;
                     }
-                    healthComponent2.health -= 0.5;
+                    healthComponent2.health -= 0.01 * dammageComponent.dammage;
                 }
         });
     });
