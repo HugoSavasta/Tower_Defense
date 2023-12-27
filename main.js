@@ -74,7 +74,7 @@ const systems = [
 let level = 1;
 let score = 0;
 let gameOver = false;
-let winningScore = 5000000;
+let won = false;
 const cellSize = 100;
 const cellGap = 3;
 
@@ -228,7 +228,7 @@ function handleGameStatus(gaOv) {
         document.body.appendChild(temp_canvas);
     }
 
-    if (score >= winningScore) {
+    if (won && !gaOv) {
         const temp_canvas2 = document.createElement('canvas');
         temp_canvas2.id = 'temp_canvas';
         temp_canvas2.width = canvas.width;
@@ -236,10 +236,23 @@ function handleGameStatus(gaOv) {
         temp_ctx = temp_canvas2.getContext('2d');
         temp_ctx.fillStyle = 'black';
         temp_ctx.font = '60px Orbitron';
-        temp_ctx.fillText('LEVEL COMPLETE', 130, 300);
+        temp_ctx.fillText('LEVEL COMPLETE', 130, 100);
         temp_ctx.font = '30px Orbitron';
-        temp_ctx.fillText('You won with ' + score + ' points!', 134, 340);
+        temp_ctx.fillText('You won with ' + score + ' points!', 134, 160);
+        entityManager.projectiles.clear();
+        entityManager.zombies.clear();
+        entityManager.resources.clear();
         document.body.appendChild(temp_canvas2);
+        setTimeout(() => {
+            const tempCanvases = document.querySelectorAll('#temp_canvas');
+            tempCanvases.forEach((canvas) => {
+                canvas.parentNode.removeChild(canvas);
+            });
+            level++;
+            enemiesInterval = 700;
+            won = false;
+        }, 5000);
+     
     }
     
 }
@@ -248,7 +261,7 @@ const amounts = [20, 30, 40];
 
 
 function handleResources() {
-    if (frame % 500 === 0 && score < winningScore) {
+    if (frame % 500 === 0 && !won) {
         const resource = new Entity("Resource");
         resource.addComponent(new ContextComponent(ctx));
         resource.addComponent(new SizeComponent(cellSize * 0.6, cellSize * 0.6));
@@ -269,7 +282,7 @@ observer.subscribe((data) => {
           handleGameStatus(true);
        }
        else if(data === "Space key pressed"){
-          resetGame(level);
+          resetGame();
        }
        else if(data === "Scored"){
         score++;
@@ -363,49 +376,6 @@ canvas.addEventListener('click', function() {
 
 
 
-function generateProceduralPath(numSteps) {
-    const startPoint = { x: 0, y: 0 };
-    const pathPoints = [startPoint];
-    let x = 0
-    let y = canvas.height / 2
-    for (let i = 0; i < numSteps; i++) {
-        const prevPoint = pathPoints[pathPoints.length - 1];
-        const randomChoice =  (Math.floor(Math.random() * 2) + Math.floor(Math.random() * 2));
-        if(randomChoice === 0 && Math.floor(Math.random()) === 0){
-            x += 2
-        }
-        if(randomChoice === 0 && Math.floor(Math.random()) === 1){
-            x -= 2
-        }
-        else if(randomChoice === 1 && Math.floor(Math.random()) === 0 && y < canvas.height - cellSize){
-            y += 1
-        }
-        else if(randomChoice === 2 && Math.floor(Math.random()) === 1 && y + cellSize > 0){
-            y -= 1
-        }
-        const nextPoint = {
-            x: x,
-            y: y,
-        };
-    
-        pathPoints.push(nextPoint);
-    }
-
-    return pathPoints;
-}
-
-function drawPath(pathPoints) {
-    ctx.beginPath();
-    ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
-    for (let i = 1; i < pathPoints.length; i++) {
-        ctx.lineTo(pathPoints[i].x, pathPoints[i].y);
-    }
-    ctx.strokeStyle = 'blue';
-    ctx.lineWidth = 5;
-    ctx.stroke();
-}
-
-
 
 for (let y = cellSize; y < canvas.height; y += cellSize) {
     for (let x = 0; x < canvas.width; x += cellSize) {
@@ -420,12 +390,14 @@ for (let y = cellSize; y < canvas.height; y += cellSize) {
 }
 
 
-function resetGame(level) {
+function resetGame() {
     if(gameOver){
         enemiesInterval = 800;
         score = 0;
         gameOver = false;
+        won = false;
         setResource(300);
+        level = 0;
         setZombies(-numberOfZombies);
         entityManager.defenders.clear();
         entityManager.projectiles.clear();
@@ -440,11 +412,6 @@ function resetGame(level) {
         requestAnimationFrame(animate);
     }
 }
-
-
-// const generatedPath = generateProceduralPath(1500);
-// drawPath(generatedPath);
-
 
 function animate(currentTime) {
 
@@ -464,15 +431,19 @@ function animate(currentTime) {
     {
          ChooseDefenderBoarderRenderSystem(choosedDefender[0]);
     }
-    console.log(enemiesInterval);
-    if (frame % enemiesInterval === 0) {
+
+    if (frame % enemiesInterval === 0 && enemiesInterval > 71 - level) {
        
-        for (let i = 0; i < 1; i++) {
-            let verticalPosition = Math.floor(Math.random() * 5) * cellSize+cellSize + cellGap;
-                createZombie(850, verticalPosition);
-                setZombies(1);
+        let verticalPosition = Math.floor(Math.random() * 5) * cellSize+cellSize + cellGap;
+        createZombie(850, verticalPosition);
+        setZombies(1);
+
+        if (enemiesInterval > 71 - level) {
+            enemiesInterval -= 20;
         }
-        if (enemiesInterval > 70) enemiesInterval -= 20;
+    }
+    if (enemiesInterval <= 61 - level){
+        won = true;
     }
 
     if (entityManager.resources.size > 0 && mouse.getComponent("PositionComponent").x && mouse.getComponent("PositionComponent").y){
