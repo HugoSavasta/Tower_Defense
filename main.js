@@ -1,9 +1,12 @@
-import {ctx1, canvas1, ctx2, canvas2} from "./utils.js";
+import {ctx, canvas} from "./utils.js";
 import { observer } from "./Observable.js";
 import { numberOfZombies, setZombies, setResource, decResource, numberOfResources, FloatingMessage, floatingMessages, handleFloatingMessages } from "./utils.js";
 
 import Entity from "./Entity.js";
 import {entityManager} from "./EntityManager.js";
+
+//components
+import DammageComponent from "./components/DammageComponent.js";
 import PositionComponent from "./components/PositionComponent.js";
 import AnimationComponent from "./components/AnimationComponent.js";
 import CollisionComponent from "./components/CollisionComponent.js";
@@ -14,6 +17,7 @@ import ShootComponent from "./components/ShootComponent.js";
 import VelocityComponent from "./components/VelocityComponent.js";
 import TextComponent from "./components/TextComponent.js";
 import ImageComponent from "./components/ImageComponent.js";
+import CostComponent from "./components/CostComponent.js";
 
 //collisions system
 import MouseCellCollisionSystemSystem from "./systems/collision/MouseCellCollisionSystem.js";
@@ -36,14 +40,15 @@ import DefenderRenderSystem from "./systems/render/DefenderRenderSystem.js";
 import ProjectileRenderSystem from "./systems/render/ProjectileRenderSystem.js";
 import ResourceRenderSystem from "./systems/render/ResourceRenderSystem.js";
 import ZombieRenderSystem from "./systems/render/ZombieRenderSystem.js";
+import ChooseDefenderBoarderRenderSystem from "./systems/render/ChooseDefenderBoarderRenderSystem.js";
 
 // behaviour system
 import ShootSystem from "./systems/behaviours/ShootSystem.js";
 import ZombieLifeSystem from "./systems/behaviours/ZombieLifeSystem.js";
 import DefenderLifeSystem from "./systems/behaviours/DefenderLifeSystem.js";
 
-// import GameSystem from "./systems/GameSystem.js";
-export const entities = new Map();
+
+
 
 const systems = [
     ProjectileBoundaryCollisionSystem,
@@ -74,6 +79,9 @@ const cellSize = 100;
 const cellGap = 3;
 
 
+const mouse = new Entity("Mouse");
+mouse.addComponent(new PositionComponent(0, 0));
+mouse.addComponent(new SizeComponent(0.1, 0.1));
 
 let frame = 0
 let enemiesInterval = 200;
@@ -87,79 +95,109 @@ let delta_time = 0;
 
 
 const plant = new Entity("Choose_plant_1");
-plant.addComponent(new ContextComponent(ctx1));
+plant.addComponent(new ContextComponent(ctx));
 plant.addComponent(new ImageComponent("assets/plant.png"));
-plant.addComponent(new SizeComponent(70, 85));
-plant.addComponent(new PositionComponent(10, 10));
+plant.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
+plant.addComponent(new PositionComponent(0, 0));
+plant.addComponent(new CostComponent(100));
 entityManager.add(plant);
-entities.set(plant.id, plant);
+
 
 const plant2 = new Entity("Choose_plant_2");
-plant2.addComponent(new ContextComponent(ctx1));
-plant2.addComponent(new ImageComponent("assets/plant.png"));
-plant2.addComponent(new SizeComponent(70, 85));
-plant2.addComponent(new PositionComponent(90, 10));
+plant2.addComponent(new ContextComponent(ctx));
+plant2.addComponent(new ImageComponent("assets/sunflower_shot.png"));
+plant2.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
+plant2.addComponent(new PositionComponent(100, 0));
+plant2.addComponent(new CostComponent(200));
 entityManager.add(plant2);
-entities.set(plant2.id, plant2);
+
+const plant3 = new Entity("Choose_plant_3");
+plant3.addComponent(new ContextComponent(ctx));
+plant3.addComponent(new ImageComponent("assets/plant3.png"));
+plant3.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
+plant3.addComponent(new PositionComponent(200, 0));
+plant3.addComponent(new CostComponent(300));
+entityManager.add(plant3);
 
 
-function createDefender(x, y) {
-    
+
+function createDefender(type, x, y) {
+
     const defender = new Entity("Defender");
 
-    defender.addComponent(new ContextComponent(ctx1));
-    defender.addComponent(new ImageComponent("assets/sunflower_shot.png"));
+
+    if(type === 0){
+        defender.addComponent(new ImageComponent("assets/plant.png"));
+        defender.addComponent(new AnimationComponent(0, 0, 0, 1, 167, 243, 60));
+        defender.addComponent(new DammageComponent(10));
+        defender.addComponent(new ShootComponent(true));
+        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(2).build();
+    }
+    else  if(type === 1){
+        defender.addComponent(new ImageComponent("assets/sunflower_shot.png"));
+        defender.addComponent(new AnimationComponent(0, 0, 0, 20, 21525/21, 1026, 99));
+        defender.addComponent(new DammageComponent(15));
+        defender.addComponent(new ShootComponent(true));
+        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(20).build();
+    }
+    else if(type === 2){
+        defender.addComponent(new ImageComponent("assets/plant3.png"));
+        defender.addComponent(new AnimationComponent(0, 0, 0, 1, 761/2, 274, 60));
+        defender.addComponent(new DammageComponent(20));
+        defender.addComponent(new ShootComponent(true));
+        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(10).build();
+    }
+      //added shoot builder component
+  
+    defender.addComponent(new ContextComponent(ctx));
     defender.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     defender.addComponent(new PositionComponent(x, y));
     defender.addComponent(new HealthComponent(100));
-    defender.addComponent(new AnimationComponent(0, 0, 0, 20, 21525/21, 1025, 30));
     defender.addComponent(new CollisionComponent(2, false));
-    defender.addComponent(new ShootComponent(true));
-      //added shoot builder component
-    defender.getComponent("ShootComponent").setShootNow(true).build()
+    
+
   
     entityManager.add(defender);
-    entities.set(defender.id, defender);
- 
+
     console.log("Defender created at " + x + " " + y);
     observer.notify("Defender created at " + x + " " + y);
 }
 
-;
+let choosedDefender = [];
+
 function createZombie(x, y) {
-    
     const zombie = new Entity("Zombie");
-    zombie.addComponent(new ContextComponent(ctx1));
+    zombie.addComponent(new ContextComponent(ctx));
     zombie.addComponent(new ImageComponent("assets/zombie.png"));
     zombie.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     zombie.addComponent(new PositionComponent(x, y));
-    let randomSpeed = 0.5
+    let randomSpeed = 0.4
     zombie.addComponent(new VelocityComponent(-randomSpeed, 0));
-    let randomHealth = Math.floor(Math.random() * 500 + 100)
+    let randomHealth = Math.floor(Math.random() * 50000 + 100000)
     zombie.addComponent(new HealthComponent(randomHealth));
     zombie.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410, 30));
     zombie.addComponent(new CollisionComponent(2, false));
     //added shoot builder component
     entityManager.add(zombie);
-    entities.set(zombie.id, zombie);
+  
     setZombies(1);
 }
 
 let canvasPosition = canvas.getBoundingClientRect();
 
-const mouse = new Entity("Mouse");
-mouse.addComponent(new PositionComponent(0, 0));
-mouse.addComponent(new SizeComponent(0.1, 0.1));
 
-canvas2.addEventListener('mousemove', function (e) {
+
+
+canvas.addEventListener('mousemove', function (e) {
     mouse.getComponent("PositionComponent").x = e.x - canvasPosition.left;
     mouse.getComponent("PositionComponent").y = e.y - canvasPosition.top;
 });
 
-canvas2.addEventListener('mouseleave', function () {
+canvas.addEventListener('mouseleave', function () {
     mouse.getComponent("PositionComponent").x = undefined;
     mouse.getComponent("PositionComponent").y = undefined;
 });
+
 
 document.addEventListener('keydown', (event) => {
     if (event.code === "Space") {
@@ -167,28 +205,43 @@ document.addEventListener('keydown', (event) => {
     }
 });
   
-
+let temp_ctx = null;
 function handleGameStatus(gaOv) {
-    ctx2.fillStyle = 'gold';
-    ctx2.font = '30px Orbitron';
-    ctx2.fillText('Score: ' + score, 200, 40);
-    ctx2.fillText('Resources: ' + numberOfResources, 200, 80);
+
+    ctx.fillStyle = 'gold';
+    ctx.font = '30px Orbitron';
+    ctx.fillText('Score: ' + score, 600, 30);
+    ctx.fillText('Resources: ' + numberOfResources, 600, 60);
+
     if (gaOv) {
-        ctx2.fillStyle = 'blue';
-        ctx2.font = '90px Orbitron';
-        ctx2.fillText('GAME OVER', 135, 330);
-        ctx2.font = '45px Orbitron';
-        ctx2.fillText('\n\nPress Space to Restart', 135, 430);
+        const temp_canvas = document.createElement('canvas');
+        temp_canvas.id = 'temp_canvas';
+        temp_canvas.width = canvas.width;
+        temp_canvas.height = canvas.height/2;
+        temp_ctx = temp_canvas.getContext('2d');
+        temp_ctx.fillStyle = 'blue';
+        temp_ctx.font = '90px Orbitron';
+        temp_ctx.fillText('GAME OVER', 135, 100);
+        temp_ctx.font = '45px Orbitron';
+        temp_ctx.fillText('\n\nPress Space to Restart', 135, 160);
         gameOver = gaOv;
+        document.body.appendChild(temp_canvas);
     }
 
     if (score >= winningScore) {
-        ctx2.fillStyle = 'black';
-        ctx2.font = '60px Orbitron';
-        ctx2.fillText('LEVEL COMPLETE', 130, 300);
-        ctx2.font = '30px Orbitron';
-        ctx2.fillText('You won with ' + score + ' points!', 134, 340);
+        const temp_canvas2 = document.createElement('canvas');
+        temp_canvas2.id = 'temp_canvas';
+        temp_canvas2.width = canvas.width;
+        temp_canvas2.height = canvas.height/2;
+        temp_ctx = temp_canvas2.getContext('2d');
+        temp_ctx.fillStyle = 'black';
+        temp_ctx.font = '60px Orbitron';
+        temp_ctx.fillText('LEVEL COMPLETE', 130, 300);
+        temp_ctx.font = '30px Orbitron';
+        temp_ctx.fillText('You won with ' + score + ' points!', 134, 340);
+        document.body.appendChild(temp_canvas2);
     }
+    
 }
 
 const amounts = [20, 30, 40];
@@ -197,16 +250,14 @@ const amounts = [20, 30, 40];
 function handleResources() {
     if (frame % 500 === 0 && score < winningScore) {
         const resource = new Entity("Resource");
-        resource.addComponent(new ContextComponent(ctx2));
+        resource.addComponent(new ContextComponent(ctx));
         resource.addComponent(new SizeComponent(cellSize * 0.6, cellSize * 0.6));
         resource.addComponent(new PositionComponent(
         Math.random() * (canvas.width - cellSize), 
-
         (Math.floor(Math.random() * 5) + 1) * cellSize + 25));
         resource.addComponent(new CollisionComponent(1, false));
         resource.addComponent(new TextComponent(amounts[Math.floor(Math.random() * amounts.length)]));
         entityManager.add(resource);
-        entities.set(resource.id, resource);
     }        
 }
 
@@ -230,21 +281,32 @@ observer.subscribe((data) => {
 });
 
 
-canvas2.addEventListener('click', function() {
+canvas.addEventListener('click', function() {
+   
     const pos = mouse.getComponent("PositionComponent")
     const size = mouse.getComponent("SizeComponent")
+
+
+    const selectedDefender = MouseChooseDefenderCollisionSystem(
+        pos.x,
+        pos.y, 
+        size.width,
+        size.height
+    );
+   
+    if(selectedDefender !== null){
+        if(choosedDefender.length > 0){
+            if(choosedDefender[0].name !== selectedDefender.name){
+                choosedDefender[0] = selectedDefender;
+            }
+        }else{
+            choosedDefender.push(selectedDefender);
+        }
+    }
+ 
     const gridPositionX = pos.x - (pos.x % cellSize) + cellGap;
     const gridPositionY = pos.y - (pos.y % cellSize) + cellGap;
-    if (gridPositionY < cellSize) return;
-
-    // if(!MouseDefenderCollisionSystem(
-    //     entities,
-    //     pos.x,
-    //     pos.y, 
-    //     mouse.getComponent("SizeComponent").width,
-    //     mouse.getComponent("SizeComponent").height
-    // ))
- 
+    if(gridPositionY < cellSize) return;
     if(!MouseDefenderCollisionSystem(
         gridPositionX,
         gridPositionY, 
@@ -252,10 +314,44 @@ canvas2.addEventListener('click', function() {
         size.height
     )) 
     {
+
         let defenderCost = 100;
         if (numberOfResources >= defenderCost) {
-            createDefender(gridPositionX, gridPositionY);
-            decResource(defenderCost);
+            const pos = mouse.getComponent("PositionComponent")
+         
+            if(choosedDefender.length === 0){
+                floatingMessages.push(new FloatingMessage('Please choose defender',
+                pos.x, pos.y, 20, 'red'));
+                return;
+            }
+            const CostComponent = choosedDefender[0].getComponent("CostComponent");
+            if(choosedDefender[0].name === "Choose_plant_1"){
+                if (CostComponent.cost <= numberOfResources){
+                    createDefender(0, gridPositionX, gridPositionY);
+                    decResource(CostComponent.cost);
+                }else{
+                    floatingMessages.push(new FloatingMessage('Need more resources',
+                    pos.x, pos.y, 20, 'red'));
+                }
+              
+            }else  if(choosedDefender[0].name === "Choose_plant_2"){
+                if (CostComponent.cost <= numberOfResources){
+                    createDefender(1, gridPositionX, gridPositionY);
+                    decResource(CostComponent.cost);
+                }else{
+                    floatingMessages.push(new FloatingMessage('Need more resources',
+                    pos.x, pos.y, 20, 'red'));
+                }
+            }else  if(choosedDefender[0].name === "Choose_plant_3"){
+                if (CostComponent.cost <= numberOfResources){
+                    createDefender(2, gridPositionX, gridPositionY);
+                    decResource(CostComponent.cost);
+                }else{
+                    floatingMessages.push(new FloatingMessage('Need more resources',
+                    pos.x, pos.y, 20, 'red'));
+                }
+            }
+           
         } else {
             floatingMessages.push(new FloatingMessage('Need more resources',
              pos.x, pos.y, 20, 'red'));
@@ -265,21 +361,6 @@ canvas2.addEventListener('click', function() {
     }
 });
 
-canvas2.addEventListener('click', function() {
-    const pos = mouse.getComponent("PositionComponent")
-    const size = mouse.getComponent("SizeComponent")
-    const choosedDefender = MouseChooseDefenderCollisionSystem(
-        pos.x,
-        pos.y, 
-        size.width,
-        size.height
-    );
-  
-    if(choosedDefender) 
-    {
-        console.log(choosedDefender);
-    }
-});
 
 
 function generateProceduralPath(numSteps) {
@@ -330,11 +411,11 @@ for (let y = cellSize; y < canvas.height; y += cellSize) {
     for (let x = 0; x < canvas.width; x += cellSize) {
         const cell = new Entity("Cell")
         cell.addComponent(new SizeComponent(cellSize - cellGap * 1, cellSize - cellGap * 1));
-        cell.addComponent(new ContextComponent(ctx1));
+        cell.addComponent(new ContextComponent(ctx));
         cell.addComponent(new PositionComponent(x, y));
         cell.addComponent(new CollisionComponent(1, false));
         entityManager.add(cell);
-        entities.set(cell.id, cell);
+
     }
 }
 
@@ -345,25 +426,20 @@ function resetGame(level) {
         score = 0;
         gameOver = false;
         setResource(300);
-        entities.forEach(entity => {
-            if(entity.name === "Defender" || entity.name === "Zombie" 
-            || entity.name === "Projectile" || entity.name === "Resource"){
-                entityManager.remove(entity);
-                entities.delete(entity.id);
-            }
-        });
         setZombies(-numberOfZombies);
         entityManager.defenders.clear();
         entityManager.projectiles.clear();
         entityManager.zombies.clear();
+        entityManager.resources.clear();
         observer.notify("Game Reset");  
+        choosedDefender = [];
+        const tempCanvases = document.querySelectorAll('#temp_canvas');
+        tempCanvases.forEach((canvas) => {
+            canvas.parentNode.removeChild(canvas);
+        });
         requestAnimationFrame(animate);
     }
 }
-const controlsBar = {
-  width: canvas.width,
-  height: cellSize,
-};
 
 
 // const generatedPath = generateProceduralPath(1500);
@@ -376,15 +452,32 @@ function animate(currentTime) {
     delta_time = currentTime - previousTime;
     delta_time_multiplier = delta_time / frame_interval;  
     previousTime = currentTime;
-    ctx1.clearRect(0, 0, canvas1.width, canvas1.height)
-    ctx2.clearRect(0, 0, canvas2.width, canvas2.height)
-    ctx1.fillStyle = 'red';
-    ctx1.fillRect(0, 0, controlsBar.width, controlsBar.height);
+    //game board
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    //choose board
+    // ctx.fillStyle = 'red';
+    // ctx.fillRect(0, 0, canvas.width, cellSize)
+   
   
+    if(choosedDefender.length > 0) 
+    {
+        //display rectangle around choosed defender
+
+        const pos = choosedDefender[0].getComponent("PositionComponent");
+        const size = choosedDefender[0].getComponent("SizeComponent");
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(pos.x,
+         pos.y, 
+         size.width, 
+         size.height);
+        
+    }
     if (frame % enemiesInterval === 0) {
        
         for (let i = 0; i < 1; i++) {
-            let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
+            let verticalPosition = Math.floor(Math.random() * 5) * cellSize+cellSize + cellGap;
                 createZombie(900, verticalPosition);
                 setZombies(1);
         }
@@ -400,23 +493,10 @@ function animate(currentTime) {
         );
     }
 
-    // if (entities.size > 0 && mouse.getComponent("PositionComponent").x && mouse.getComponent("PositionComponent").y){
-    //     MouseResouceCollisionSystem(
-    //         entities,
-    //         mouse.getComponent("PositionComponent").x,
-    //         mouse.getComponent("PositionComponent").y, 
-    //         mouse.getComponent("SizeComponent").width,
-    //         mouse.getComponent("SizeComponent").height
-    //     );
-    // }
-
     systems.forEach(system => {
         system(delta_time_multiplier, frame);
     });
  
-   
-    // GameSystem(entities, delta_time_multiplier, frame);
-  
     handleFloatingMessages();
     handleGameStatus();
     handleResources();
@@ -432,4 +512,5 @@ requestAnimationFrame(animate);
 
 window.addEventListener('resize', function () {
     canvasPosition = canvas.getBoundingClientRect();
+
 });

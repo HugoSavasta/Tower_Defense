@@ -6,6 +6,7 @@ function ZombieProjectileCollisionSystem(delta, frame) {
         entityManager.projectiles.forEach(entity => {
             const positionComponent = entity.getComponent("PositionComponent");
             const sizeComponent = entity.getComponent("SizeComponent");
+            const dammageComponent = entity.getComponent("DammageComponent");
             let healthComponent = entity2.getComponent("HealthComponent");
             let positionComponent2 = entity2.getComponent("PositionComponent");
             let sizeComponent2 = entity2.getComponent("SizeComponent");
@@ -15,7 +16,7 @@ function ZombieProjectileCollisionSystem(delta, frame) {
                 positionComponent2.y > positionComponent.y + sizeComponent.height ||
                 positionComponent2.y + sizeComponent2.height < positionComponent.y
               )){
-                healthComponent.health -= 15;
+                healthComponent.health -= dammageComponent.dammage;
                 entityManager.remove(entity);
             } 
         });   

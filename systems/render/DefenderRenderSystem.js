@@ -17,12 +17,16 @@ function DefenderRenderSystem (delta, frame) {
             positionComponent.x + 15, positionComponent.y - 10);
           
         contextComponent.context.drawImage(imageComponent.image, 
-            animationComponent.frameX * animationComponent.spriteWidth, 0, 
-            animationComponent.spriteWidth, animationComponent.spriteHeight, 
-            positionComponent.x, positionComponent.y, sizeComponent.width, 
-        sizeComponent.height);
+            animationComponent.frameX * animationComponent.spriteWidth,
+            0, 
+            animationComponent.spriteWidth, 
+            animationComponent.spriteHeight, 
+            positionComponent.x,
+             positionComponent.y, 
+             sizeComponent.width, 
+             sizeComponent.height);
     
-        if (frame % 4 === 0) { // change the number for more or less speed
+        if (frame % (100 - animationComponent.frameSpeed ) === 0) { // change the number for more or less speed
             if (animationComponent.frameX < animationComponent.maxFrame) {
                 animationComponent.frameX++;
             }

@@ -1,24 +1,16 @@
-const canvas1 = document.getElementById("canvas");
-canvas1.width = 900;
-canvas1.height = 600;
-
-const canvas2 = document.getElementById("ui");
-canvas2.width = 900;
-canvas2.height = 600;
+const canvas = document.getElementById("canvas");
+canvas.width = 900;
+canvas.height = 600;
+const ctx = canvas.getContext("2d");
 
 
-const ctx1 = canvas.getContext("2d");
-const ctx2 = canvas2.getContext("2d");
 
-ctx1.webkitImageSmoothingEnabled = false;
-ctx1.mozImageSmoothingEnabled = false;
-ctx1.imageSmoothingEnabled = false;
+ctx.webkitImageSmoothingEnabled = false;
+ctx.mozImageSmoothingEnabled = false;
+ctx.imageSmoothingEnabled = false;
 
-ctx2.webkitImageSmoothingEnabled = false;
-ctx2.mozImageSmoothingEnabled = false;
-ctx2.imageSmoothingEnabled = false;
 
-export {canvas1, canvas2, ctx1, ctx2};
+export {canvas, ctx};
 
 
 export class Vector2d {
@@ -58,11 +50,11 @@ export class FloatingMessage {
     }
     
     draw() {
-        ctx2.globalAlpha = this.opacity;
-        ctx2.fillStyle = this.color;
-        ctx2.font = this.size + 'px Orbitron';
-        ctx2.fillText(this.value, this.x, this.y);
-        ctx2.globalAlpha = 1;
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+        ctx.font = this.size + 'px Orbitron';
+        ctx.fillText(this.value, this.x, this.y);
+        ctx.globalAlpha = 1;
     }
 }
 

@@ -7,12 +7,10 @@ function ProjectileMovementSystem(delta, frame) {
             const velocityComponent = entity.getComponent("VelocityComponent");
        
            if (projectileComponent && positionComponent && velocityComponent) {
-                if (frame % 3 === 0) {
-                    positionComponent.x += velocityComponent.x * delta;
-                    positionComponent.y += velocityComponent.y * delta;
-                    positionComponent.old_x = positionComponent.x;
-                    positionComponent.old_y = positionComponent.y;
-                }
+                positionComponent.x += velocityComponent.x * delta;
+                positionComponent.y += velocityComponent.y * delta;
+                positionComponent.old_x = positionComponent.x;
+                positionComponent.old_y = positionComponent.y;
             }
         });
     }
