@@ -1,4 +1,4 @@
-import {entityManager} from "../../EntityManager.js";
+import {entityManager} from "../../scripts/EntityManager.js";
 
 function ZombieBoundaryCollisionSystem (delta, frame) {
     entityManager.zombies.forEach(entity => {

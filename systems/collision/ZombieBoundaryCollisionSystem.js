@@ -1,5 +1,5 @@
-import { observer } from "../../Observable.js";
-import {entityManager} from "../../EntityManager.js";
+import { observer } from "../../scripts/Observable.js";
+import {entityManager} from "../../scripts/EntityManager.js";
 
 function ZombieBoundaryCollisionSystem (delta, frame) {
     entityManager.zombies.forEach(entity => {

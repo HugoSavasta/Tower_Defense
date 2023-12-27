@@ -1,4 +1,4 @@
-import {entityManager} from "../../EntityManager.js";
+import {entityManager} from "../../scripts/EntityManager.js";
 
 function MouseChooseDefenderCollisionSystem(mouseX, mouseY, mouseWidth, mouseHeight) {
     let collided = null;

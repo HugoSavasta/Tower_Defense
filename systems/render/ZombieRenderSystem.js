@@ -1,4 +1,4 @@
-import {entityManager} from "../../EntityManager.js";
+import {entityManager} from "../../scripts/EntityManager.js";
 
 function mapValue(value, start1, stop1, start2, stop2, withinBounds) {
     const newValue = start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));

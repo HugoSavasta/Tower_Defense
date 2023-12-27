@@ -1,5 +1,5 @@
-import {entityManager} from "../../EntityManager.js";
-import { observer } from "../../Observable.js";
+import {entityManager} from "../../scripts/EntityManager.js";
+import { observer } from "../../scripts/Observable.js";
 function ZombieLifeSystem (delta, frame) {
     entityManager.zombies.forEach(entity => {
         let healthComponent = entity.getComponent("HealthComponent");

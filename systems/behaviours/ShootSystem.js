@@ -1,5 +1,5 @@
-import {ctx} from "../../utils.js";
-import Entity from "../../Entity.js";
+import {ctx} from "../../scripts/utils.js";
+import Entity from "../../scripts/Entity.js";
 import PositionComponent from "../../components/PositionComponent.js";
 import CollisionComponent from "../../components/CollisionComponent.js";
 import SizeComponent from "../../components/SizeComponent.js";
@@ -7,7 +7,7 @@ import ContextComponent from "../../components/ContextComponent.js";
 import VelocityComponent from "../../components/VelocityComponent.js";
 import ProjectileComponent from "../../components/ProjectileComponent.js";
 import DammageComponent from "../../components/DammageComponent.js";
-import {entityManager} from "../../EntityManager.js";
+import {entityManager} from "../../scripts/EntityManager.js";
 
 function ShootSystem(delta, frame) {
     if (entityManager.zombies.size === 0) return;

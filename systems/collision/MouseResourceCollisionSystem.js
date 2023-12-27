@@ -1,6 +1,6 @@
-import {observer} from "../../Observable.js";
-import { incResource, FloatingMessage, floatingMessages } from "../../utils.js";
-import {entityManager} from "../../EntityManager.js";
+import {observer} from "../../scripts/Observable.js";
+import { incResource, FloatingMessage, floatingMessages } from "../../scripts/utils.js";
+import {entityManager} from "../../scripts/EntityManager.js";
 
 function MouseResouceCollisionSystem(mouseX, mouseY, mouseWidth, mouseHeight) {
 

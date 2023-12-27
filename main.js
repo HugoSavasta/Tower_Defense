@@ -1,9 +1,9 @@
-import {ctx, canvas} from "./utils.js";
-import { observer } from "./Observable.js";
-import { numberOfZombies, setZombies, setResource, decResource, numberOfResources, FloatingMessage, floatingMessages, handleFloatingMessages } from "./utils.js";
+import {ctx, canvas} from "./scripts/utils.js";
+import { observer } from "./scripts/Observable.js";
+import { numberOfZombies, setZombies, setResource, decResource, numberOfResources, FloatingMessage, floatingMessages, handleFloatingMessages } from "./scripts/utils.js";
 
-import Entity from "./Entity.js";
-import {entityManager} from "./EntityManager.js";
+import Entity from "./scripts/Entity.js";
+import {entityManager} from "./scripts/EntityManager.js";
 
 //components
 import DammageComponent from "./components/DammageComponent.js";
@@ -472,7 +472,7 @@ function animate(currentTime) {
                 createZombie(850, verticalPosition);
                 setZombies(1);
         }
-        if (enemiesInterval > 60) enemiesInterval -= 20;
+        if (enemiesInterval > 70) enemiesInterval -= 20;
     }
 
     if (entityManager.resources.size > 0 && mouse.getComponent("PositionComponent").x && mouse.getComponent("PositionComponent").y){
