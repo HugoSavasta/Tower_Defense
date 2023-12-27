@@ -1,4 +1,4 @@
-import { generateSimpleUUID } from "../utils.js";
+import { generateSimpleUUID } from "../scripts/utils.js";
 
 class Entity {
     constructor(name = "") {
