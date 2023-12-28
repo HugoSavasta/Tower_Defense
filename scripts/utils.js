@@ -13,12 +13,6 @@ ctx.imageSmoothingEnabled = false;
 export {canvas, ctx};
 
 
-export class Vector2d {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-};
 
 export function generateSimpleUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {

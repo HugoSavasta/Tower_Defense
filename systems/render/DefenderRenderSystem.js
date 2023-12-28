@@ -9,7 +9,7 @@ function DefenderRenderSystem (delta, frame) {
         const healthComponent = entity.getComponent("HealthComponent");
         const sizeComponent = entity.getComponent("SizeComponent");
         const imageComponent = entity.getComponent("ImageComponent");
-        
+        if (positionComponent === undefined || contextComponent === undefined || animationComponent === undefined || healthComponent === undefined || sizeComponent === undefined || imageComponent === undefined) return;
         contextComponent.context.fillStyle = 'gold';
         contextComponent.context.font = '30px Orbitron';
         contextComponent.context.fillText(

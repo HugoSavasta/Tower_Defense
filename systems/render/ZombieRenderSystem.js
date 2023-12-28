@@ -21,6 +21,7 @@ function ZombieRenderSystem (delta, frame) {
         const sizeComponent = entity.getComponent("SizeComponent");
         const imageComponent = entity.getComponent("ImageComponent");
 
+        if (positionComponent === undefined || contextComponent === undefined || animationComponent === undefined || healthComponent === undefined || sizeComponent === undefined || imageComponent === undefined) return;
         contextComponent.context.drawImage(imageComponent.image, 
             animationComponent.frameX * animationComponent.spriteWidth, 0, 
             animationComponent.spriteWidth, animationComponent.spriteHeight, 

@@ -8,6 +8,8 @@ function MouseResouceCollisionSystem(mouseX, mouseY, mouseWidth, mouseHeight) {
         const positionComponent = entity.getComponent("PositionComponent");
         const sizeComponent = entity.getComponent("SizeComponent");
         const textComponent = entity.getComponent("TextComponent");
+        const collisionComponent = entity.getComponent("CollisionComponent");
+        if (collisionComponent === undefined || positionComponent === undefined || sizeComponent === undefined) return;
         if (!(
             positionComponent.x > mouseX + mouseWidth ||
             positionComponent.x + sizeComponent.width < mouseX ||

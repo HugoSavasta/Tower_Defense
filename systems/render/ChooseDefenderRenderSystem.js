@@ -10,7 +10,8 @@ function ChooseDefenderRenderSystem (delta, frame) {
         const animationComponent = entity.getComponent("AnimationComponent");
         const costComponent = entity.getComponent("CostComponent");
                 
-
+        if (positionComponent === undefined || contextComponent === undefined) return;
+    
         if (entity.name === "Choose_plant_1") {
 
             contextComponent.context.drawImage(imageComponent.image,

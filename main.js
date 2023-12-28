@@ -1,3 +1,17 @@
+
+
+var sound = new Howl({
+    src: ['./sounds/zombie-horde.mp3'],
+    autoplay: false,
+    loop: false,
+    volume: 0.5,
+    onend: function() {
+      console.log('Finished!');
+    }
+});
+  
+
+
 import {ctx, canvas} from "./scripts/utils.js";
 import { observer } from "./scripts/Observable.js";
 import { numberOfZombies, setZombies, setResource, decResource, numberOfResources, FloatingMessage, floatingMessages, handleFloatingMessages } from "./scripts/utils.js";
@@ -100,11 +114,13 @@ plant.addComponent(new ImageComponent("assets/plant.png"));
 plant.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
 plant.addComponent(new PositionComponent(0, 0));
 plant.addComponent(new CostComponent(100));
+plant.addComponent(new CollisionComponent());
 entityManager.add(plant);
 
 
 const plant2 = new Entity("Choose_plant_2");
 plant2.addComponent(new ContextComponent(ctx));
+plant2.addComponent(new CollisionComponent());
 plant2.addComponent(new ImageComponent("assets/sunflower_shot.png"));
 plant2.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
 plant2.addComponent(new PositionComponent(100, 0));
@@ -117,6 +133,7 @@ plant3.addComponent(new ImageComponent("assets/plant3.png"));
 plant3.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
 plant3.addComponent(new PositionComponent(200, 0));
 plant3.addComponent(new CostComponent(300));
+plant3.addComponent(new CollisionComponent());
 entityManager.add(plant3);
 
 
@@ -179,7 +196,7 @@ function createZombie(x, y) {
     zombie.addComponent(new DammageComponent(10));
     //added shoot builder component
     entityManager.add(zombie);
-  
+    sound.play();
     setZombies(1);
 }
 
@@ -251,6 +268,7 @@ function handleGameStatus(gaOv) {
             level++;
             enemiesInterval = 700;
             won = false;
+            sound.volume = 0.5;
         }, 5000);
      
     }
@@ -443,6 +461,7 @@ function animate(currentTime) {
         }
     }
     if (enemiesInterval <= 61 - level){
+        sound.volume = 0;
         won = true;
     }
 

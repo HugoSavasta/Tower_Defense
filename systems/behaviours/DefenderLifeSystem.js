@@ -1,6 +1,6 @@
 import {entityManager} from "../../scripts/EntityManager.js";
 
-function DefenderLifeSystem (delta, frame) {
+function DefenderLifeSystem () {
     entityManager.defenders.forEach(entity => {
         let healthComponent = entity.getComponent("HealthComponent");
         if (healthComponent === undefined) return;

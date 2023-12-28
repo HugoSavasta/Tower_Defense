@@ -5,6 +5,10 @@ function MouseChooseDefenderCollisionSystem(mouseX, mouseY, mouseWidth, mouseHei
     entityManager.chooses.forEach(entity => {
         const positionComponent = entity.getComponent("PositionComponent");
         const sizeComponent = entity.getComponent("SizeComponent");
+        const collisionComponent = entity.getComponent("CollisionComponent");
+
+        if (collisionComponent === undefined && 
+            positionComponent === undefined || sizeComponent === undefined) return;
         if (!(
             positionComponent.x > mouseX + mouseWidth ||
             positionComponent.x + sizeComponent.width < mouseX ||
