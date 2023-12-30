@@ -1,8 +1,6 @@
-import { generateSimpleUUID } from "../scripts/utils.js";
-
 class Entity {
     constructor(name = "") {
-        this.id = generateSimpleUUID();
+        this.id = Math.random() + Date.now() + Math.random();
         this.name = name;
         this.components = new Map();
         // console.log((name !== "" ? name + " " : "") + "Entity with id:" + this.id + " created");

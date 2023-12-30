@@ -1,35 +1,42 @@
 import {entityManager} from "../../scripts/EntityManager.js";
+import {ctx} from "../../scripts/utils.js";
 
+class CanvasContextFactory {
+    constructor(context) {
+        this.context = context;
+    }
+
+    createDrawImageFunction() {
+        return (image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) => {
+            this.context.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+        };
+    }
+}
+
+const factory = new CanvasContextFactory(ctx);
+const contextDrawImageFactory = factory.createDrawImageFunction();
 
 function ChooseDefenderRenderSystem (delta, frame) {
     entityManager.chooses.forEach(entity => {
         const positionComponent = entity.getComponent("PositionComponent");
         const contextComponent = entity.getComponent("ContextComponent");
-        const sizeComponent = entity.getComponent("SizeComponent");
         const imageComponent = entity.getComponent("ImageComponent");
-        const animationComponent = entity.getComponent("AnimationComponent");
         const costComponent = entity.getComponent("CostComponent");
-                
+            
         if (positionComponent === undefined || contextComponent === undefined) return;
-    
-        if (entity.name === "Choose_plant_1") {
 
-            contextComponent.context.drawImage(imageComponent.image,
-                0, 0, 334/2, 243, positionComponent.x, 0, 334 / 4, 243 / 3
-            );    
+   
+        if (entity.name === "Choose_plant_1") {
+            contextDrawImageFactory(imageComponent.image,
+                0, 0, 334/2, 243, positionComponent.x, 0, 334 / 4, 243 / 3)
         }
         else if (entity.name === "Choose_plant_2") {
-
-
-            contextComponent.context.drawImage(imageComponent.image,
-                0, 0, 21525/21, 1026, positionComponent.x, 15, 334 / 4, 243 / 3
-            );     
+            contextDrawImageFactory(imageComponent.image,
+                0, 0, 21525/21, 1026, positionComponent.x, 15, 334 / 4, 243 / 3)  
         }
         else if (entity.name === "Choose_plant_3") {
-
-            contextComponent.context.drawImage(imageComponent.image,
-                0, 0, 761/2, 274, positionComponent.x, 0, 761 / 9, 274 / 3
-            );   
+            contextDrawImageFactory(imageComponent.image,
+                0, 0, 761/2, 274, positionComponent.x, 0, 761 / 9, 274 / 3)
         }
        
         contextComponent.context.strokeStyle = 'white';
