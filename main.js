@@ -171,7 +171,7 @@ function createZombie(x, y) {
     zombie.addComponent(new ImageComponent("assets/zombie.png"));
     zombie.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     zombie.addComponent(new PositionComponent(x, y));
-    let randomSpeed = 5
+    let randomSpeed = Math.random() * 0.5 + 1;
     zombie.addComponent(new VelocityComponent(-randomSpeed, 0));
     let randomHealth = Math.floor(Math.random() * 50000 + 100000)
     zombie.addComponent(new HealthComponent(randomHealth));
@@ -358,7 +358,7 @@ function animate(currentTime) {
        }
        decEnemiesInterval(50);
     }
-    
+
     if (!won && !gameOver && score > 1 && enemiesInterval <= 0 && entityManager.zombies.size === 0){
         setWon(true);
         incLevel(1);
