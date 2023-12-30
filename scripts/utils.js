@@ -74,13 +74,117 @@ export function setResource(value) {
 export function incResource(value) {
     numberOfResources += value;
 }
+
 export function decResource(value) {
     numberOfResources -= value;
 }
 
-
-export let numberOfZombies = 0;
-export function setZombies(value) {
-    numberOfZombies += value;
+export let score = 0;
+export function setScore(value) {
+    score = value;
 }
 
+export function incScore(value) {
+    score += value;
+}
+
+export let enemiesInterval = 700;
+export function setEnemiesInterval(value) {
+    enemiesInterval = value;
+}
+export function decEnemiesInterval(value) {
+    enemiesInterval -= value;
+}
+
+
+export let temp_ctx = null;
+export let won = false;
+export function setWon(value) {
+    won = value;
+}
+export let gameOver = false;
+export function setGameOver(value) {
+    gameOver = value;
+}
+export let level = 1;
+export function setLevel(value) {
+    level = value;
+}
+export function incLevel(value) {
+    level += value;
+}
+
+import {entityManager} from "./EntityManager.js";
+import AllZombiesStopSoundSystem from "../systems/behaviours/AllZombiesStopSoundSystem.js";
+
+export function resetGame() {
+ 
+
+    AllZombiesStopSoundSystem();
+    entityManager.defenders.clear();
+    entityManager.projectiles.clear();
+    entityManager.zombies.clear();
+    entityManager.resources.clear();
+    // observer.notify("Game Reset");  
+ 
+    const tempCanvases = document.querySelectorAll('#temp_canvas');
+    tempCanvases.forEach((canvas) => {
+        canvas.parentNode.removeChild(canvas);
+    });
+ 
+    setScore(0);
+    setGameOver(false);
+    setWon(false);
+    setResource(300);
+    setLevel(1);
+}
+export function handleGameStatus(gO) {
+    
+    ctx.fillStyle = 'gold';
+    ctx.font = '30px Orbitron';
+    ctx.fillText('Score: ' + score, 600, 30);
+    ctx.fillText('Resources: ' + numberOfResources, 600, 60);
+
+    if (gO) {
+        const temp_canvas = document.createElement('canvas');
+        temp_canvas.id = 'temp_canvas';
+        temp_canvas.width = canvas.width;
+        temp_canvas.height = canvas.height/2;
+        temp_ctx = temp_canvas.getContext('2d');
+        temp_ctx.fillStyle = 'blue';
+        temp_ctx.font = '90px Orbitron';
+        temp_ctx.fillText('GAME OVER', 135, 100);
+        temp_ctx.font = '45px Orbitron';
+        temp_ctx.fillText('\n\nPress Space to Restart', 135, 160);
+        setGameOver(gO);
+        document.body.appendChild(temp_canvas);
+        setScore(0);
+    }
+
+    if (won && !gO) {
+        AllZombiesStopSoundSystem();
+        const temp_canvas2 = document.createElement('canvas');
+        temp_canvas2.id = 'temp_canvas';
+        temp_canvas2.width = canvas.width;
+        temp_canvas2.height = canvas.height/2;
+        temp_ctx = temp_canvas2.getContext('2d');
+        temp_ctx.fillStyle = 'black';
+        temp_ctx.font = '60px Orbitron';
+        temp_ctx.fillText('LEVEL COMPLETE', 130, 100);
+        temp_ctx.font = '30px Orbitron';
+        temp_ctx.fillText('You won with ' + score + ' points!', 134, 160);
+        entityManager.projectiles.clear();
+        entityManager.zombies.clear();
+        entityManager.resources.clear();
+        
+        document.body.appendChild(temp_canvas2);
+        setTimeout(() => {
+            const tempCanvases = document.querySelectorAll('#temp_canvas');
+            tempCanvases.forEach((canvas) => {
+                canvas.parentNode.removeChild(canvas);
+            });
+            setEnemiesInterval(700);
+            setWon(false);
+        }, 3000);
+    }
+}

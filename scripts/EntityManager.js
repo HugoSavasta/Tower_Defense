@@ -6,6 +6,7 @@ class EntityManager {
         this.resources = new Map();
         this.cells = new Map();
         this.chooses = new Map();
+        this.mouses = new Map();
     }
     add(entity){
         if(entity === undefined) {
@@ -26,6 +27,8 @@ class EntityManager {
             
         } else if(entity.name.startsWith("Choose")) {
             this.chooses.set(entity.id, entity);
+        } else if(entity.name.startsWith("Mouse")) {
+            this.mouses.set(entity.id, entity);
         }
     }
 
@@ -46,6 +49,8 @@ class EntityManager {
             this.resources.delete(entity.id);
         } else if(entity.name.startsWith("Choose")) {
             this.chooses.delete(entity.id, entity);
+        } else if(entity.name.startsWith("Mouse")) {
+            this.mouses.delete(entity.id, entity);
         }
     }
 }

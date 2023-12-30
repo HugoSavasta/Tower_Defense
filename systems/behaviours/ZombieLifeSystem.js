@@ -1,12 +1,15 @@
 import {entityManager} from "../../scripts/EntityManager.js";
-import { observer } from "../../scripts/Observable.js";
-function ZombieLifeSystem (delta, frame) {
+import { incScore } from "../../scripts/utils.js";
+import StopSoundSystem from "./StopSoundSystem.js";
+
+function ZombieLifeSystem () {
     entityManager.zombies.forEach(entity => {
-        let healthComponent = entity.getComponent("HealthComponent");
+        const healthComponent = entity.getComponent("HealthComponent");
         if (healthComponent === undefined) return;
         if(healthComponent.health <= 0){
+            StopSoundSystem(entity);
             entityManager.remove(entity);
-            observer.notify("Scored");
+            incScore(1);
         }
     });
 }

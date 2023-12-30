@@ -1,20 +1,7 @@
-
-
-var sound = new Howl({
-    src: ['./sounds/zombie-horde.mp3'],
-    autoplay: false,
-    loop: false,
-    volume: 0.5,
-    onend: function() {
-      console.log('Finished!');
-    }
-});
-  
-
-
 import {ctx, canvas} from "./scripts/utils.js";
 import { observer } from "./scripts/Observable.js";
-import { numberOfZombies, setZombies, setResource, decResource, numberOfResources, FloatingMessage, floatingMessages, handleFloatingMessages } from "./scripts/utils.js";
+import { won,setWon, level,incLevel, gameOver, enemiesInterval, decEnemiesInterval,  decResource, numberOfResources, FloatingMessage, floatingMessages,
+   resetGame, handleFloatingMessages, handleGameStatus } from "./scripts/utils.js";
 
 import Entity from "./scripts/Entity.js";
 import {entityManager} from "./scripts/EntityManager.js";
@@ -32,9 +19,10 @@ import VelocityComponent from "./components/VelocityComponent.js";
 import TextComponent from "./components/TextComponent.js";
 import ImageComponent from "./components/ImageComponent.js";
 import CostComponent from "./components/CostComponent.js";
+import SoundComponent from "./components/SoundComponent.js";
 
 //collisions system
-import MouseCellCollisionSystemSystem from "./systems/collision/MouseCellCollisionSystem.js";
+
 import MouseChooseDefenderCollisionSystem from "./systems/collision/MouseChooseDefenderCollisionSystem.js";
 import MouseDefenderCollisionSystem from "./systems/collision/MouseDefenderCollisionSystem.js";
 import MouseResouceCollisionSystem from "./systems/collision/MouseResourceCollisionSystem.js";
@@ -60,7 +48,8 @@ import ChooseDefenderBoarderRenderSystem from "./systems/render/ChooseDefenderBo
 import ShootSystem from "./systems/behaviours/ShootSystem.js";
 import ZombieLifeSystem from "./systems/behaviours/ZombieLifeSystem.js";
 import DefenderLifeSystem from "./systems/behaviours/DefenderLifeSystem.js";
-
+import ZombieSoundSystem from "./systems/behaviours/ZombieSoundSystem.js";
+import AllZombiesStopSoundSystem from "./systems/behaviours/AllZombiesStopSoundSystem.js";
 
 
 
@@ -80,15 +69,11 @@ const systems = [
     ShootSystem,
     ZombieLifeSystem,
     DefenderLifeSystem,
+    ZombieSoundSystem,
 ];
 
 
 
-
-let level = 1;
-let score = 0;
-let gameOver = false;
-let won = false;
 const cellSize = 100;
 const cellGap = 3;
 
@@ -98,7 +83,7 @@ mouse.addComponent(new PositionComponent(0, 0));
 mouse.addComponent(new SizeComponent(0.1, 0.1));
 
 let frame = 0
-let enemiesInterval = 800;
+
 
 let frames_per_second = 60;
 let previousTime = performance.now();
@@ -160,7 +145,7 @@ function createDefender(type, x, y) {
     else if(type === 2){
         defender.addComponent(new ImageComponent("assets/plant3.png"));
         defender.addComponent(new AnimationComponent(0, 0, 0, 1, 761/2, 274, 60));
-        defender.addComponent(new DammageComponent(20));
+        defender.addComponent(new DammageComponent(30));
         defender.addComponent(new ShootComponent(true));
         defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(10).build();
     }
@@ -172,8 +157,6 @@ function createDefender(type, x, y) {
     defender.addComponent(new HealthComponent(100));
     defender.addComponent(new CollisionComponent(2, false));
     
-
-  
     entityManager.add(defender);
 
     observer.notify("Defender created at " + x + " " + y);
@@ -187,17 +170,16 @@ function createZombie(x, y) {
     zombie.addComponent(new ImageComponent("assets/zombie.png"));
     zombie.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     zombie.addComponent(new PositionComponent(x, y));
-    let randomSpeed = 0.4
+    let randomSpeed = 0.5
     zombie.addComponent(new VelocityComponent(-randomSpeed, 0));
     let randomHealth = Math.floor(Math.random() * 50000 + 100000)
     zombie.addComponent(new HealthComponent(randomHealth));
     zombie.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410, 30));
     zombie.addComponent(new CollisionComponent(2, false));
     zombie.addComponent(new DammageComponent(10));
+    // zombie.addComponent(new SoundComponent("./sounds/zombie-horde.mp3"));
     //added shoot builder component
     entityManager.add(zombie);
-    sound.play();
-    setZombies(1);
 }
 
 let canvasPosition = canvas.getBoundingClientRect();
@@ -218,62 +200,14 @@ canvas.addEventListener('mouseleave', function () {
 
 document.addEventListener('keydown', (event) => {
     if (event.code === "Space") {
-        observer.notify('Space key pressed');
+        if( gameOver ){
+            resetGame();
+            choosedDefender = [];
+        }
     }
 });
   
-let temp_ctx = null;
-function handleGameStatus(gaOv) {
 
-    ctx.fillStyle = 'gold';
-    ctx.font = '30px Orbitron';
-    ctx.fillText('Score: ' + score, 600, 30);
-    ctx.fillText('Resources: ' + numberOfResources, 600, 60);
-
-    if (gaOv) {
-        const temp_canvas = document.createElement('canvas');
-        temp_canvas.id = 'temp_canvas';
-        temp_canvas.width = canvas.width;
-        temp_canvas.height = canvas.height/2;
-        temp_ctx = temp_canvas.getContext('2d');
-        temp_ctx.fillStyle = 'blue';
-        temp_ctx.font = '90px Orbitron';
-        temp_ctx.fillText('GAME OVER', 135, 100);
-        temp_ctx.font = '45px Orbitron';
-        temp_ctx.fillText('\n\nPress Space to Restart', 135, 160);
-        gameOver = gaOv;
-        document.body.appendChild(temp_canvas);
-    }
-
-    if (won && !gaOv) {
-        const temp_canvas2 = document.createElement('canvas');
-        temp_canvas2.id = 'temp_canvas';
-        temp_canvas2.width = canvas.width;
-        temp_canvas2.height = canvas.height/2;
-        temp_ctx = temp_canvas2.getContext('2d');
-        temp_ctx.fillStyle = 'black';
-        temp_ctx.font = '60px Orbitron';
-        temp_ctx.fillText('LEVEL COMPLETE', 130, 100);
-        temp_ctx.font = '30px Orbitron';
-        temp_ctx.fillText('You won with ' + score + ' points!', 134, 160);
-        entityManager.projectiles.clear();
-        entityManager.zombies.clear();
-        entityManager.resources.clear();
-        document.body.appendChild(temp_canvas2);
-        setTimeout(() => {
-            const tempCanvases = document.querySelectorAll('#temp_canvas');
-            tempCanvases.forEach((canvas) => {
-                canvas.parentNode.removeChild(canvas);
-            });
-            level++;
-            enemiesInterval = 700;
-            won = false;
-            sound.volume = 0.5;
-        }, 5000);
-     
-    }
-    
-}
 
 const amounts = [20, 30, 40];
 
@@ -297,13 +231,13 @@ function handleResources() {
 observer.subscribe((data) => {
     if(data){
        if(data === "Game Over"){
-          handleGameStatus(true);
+          
        }
        else if(data === "Space key pressed"){
-          resetGame();
+      
        }
        else if(data === "Scored"){
-        score++;
+      
        }
        else if(data === "Resource taken"){
        
@@ -408,28 +342,6 @@ for (let y = cellSize; y < canvas.height; y += cellSize) {
 }
 
 
-function resetGame() {
-    if(gameOver){
-        enemiesInterval = 800;
-        score = 0;
-        gameOver = false;
-        won = false;
-        setResource(300);
-        level = 0;
-        setZombies(-numberOfZombies);
-        entityManager.defenders.clear();
-        entityManager.projectiles.clear();
-        entityManager.zombies.clear();
-        entityManager.resources.clear();
-        observer.notify("Game Reset");  
-        choosedDefender = [];
-        const tempCanvases = document.querySelectorAll('#temp_canvas');
-        tempCanvases.forEach((canvas) => {
-            canvas.parentNode.removeChild(canvas);
-        });
-        requestAnimationFrame(animate);
-    }
-}
 
 function animate(currentTime) {
 
@@ -437,32 +349,33 @@ function animate(currentTime) {
     delta_time = currentTime - previousTime;
     delta_time_multiplier = delta_time / frame_interval;  
     previousTime = currentTime;
-    //game board
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    //choose board
+ 
     ctx.fillStyle = 'red';
     ctx.fillRect(0, 0, canvas.width, cellSize)
    
   
     if(choosedDefender.length > 0) 
     {
-         ChooseDefenderBoarderRenderSystem(choosedDefender[0]);
+        ChooseDefenderBoarderRenderSystem(choosedDefender[0]);
     }
 
-    if (frame % enemiesInterval === 0 && enemiesInterval > 71 - level) {
-       
-        let verticalPosition = Math.floor(Math.random() * 5) * cellSize+cellSize + cellGap;
-        createZombie(850, verticalPosition);
-        setZombies(1);
-
-        if (enemiesInterval > 71 - level) {
-            enemiesInterval -= 20;
+    if(!won && !gameOver){
+        if (frame % enemiesInterval === 0 && entityManager.defenders.size > 0 
+            && enemiesInterval > 0) {
+           for (let i = 0; i < level; i++) {
+            let verticalPosition = Math.floor(Math.random() * 5) * cellSize+cellSize + cellGap;
+            createZombie(850 - Math.floor(Math.random() * 5), verticalPosition);
+           }
+           decEnemiesInterval(50);
         }
     }
-    if (enemiesInterval <= 61 - level){
-        sound.volume = 0;
-        won = true;
+
+  
+    if (!won && enemiesInterval <= 0 && entityManager.zombies.size === 0){
+        setWon(true);
+        incLevel(1);
     }
 
     if (entityManager.resources.size > 0 && mouse.getComponent("PositionComponent").x && mouse.getComponent("PositionComponent").y){
@@ -479,12 +392,14 @@ function animate(currentTime) {
     });
  
     handleFloatingMessages();
-    handleGameStatus();
-    handleResources();
-    
-    if(!gameOver){
-        requestAnimationFrame(animate);
+  
+    handleGameStatus(false);
+
+    if (entityManager.zombies.size > 0) {
+        handleResources();
     }
+
+    requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);
 
