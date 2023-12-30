@@ -1,6 +1,6 @@
 class HealthComponent {
-    constructor() {
-        this.health = 100;
+    constructor(health = 0) {
+        this.health = health;
     }
 }
 export default HealthComponent;

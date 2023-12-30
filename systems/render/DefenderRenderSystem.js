@@ -12,6 +12,7 @@ function DefenderRenderSystem (delta, frame) {
         if (positionComponent === undefined || contextComponent === undefined || animationComponent === undefined || healthComponent === undefined || sizeComponent === undefined || imageComponent === undefined) return;
         contextComponent.context.fillStyle = 'gold';
         contextComponent.context.font = '30px Orbitron';
+ 
         contextComponent.context.fillText(
             Math.floor(healthComponent.health),
             positionComponent.x + 15, positionComponent.y - 10);

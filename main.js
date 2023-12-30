@@ -135,6 +135,7 @@ function createDefender(type, x, y) {
         defender.addComponent(new DammageComponent(10));
         defender.addComponent(new ShootComponent(true));
         defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(2).build();
+        defender.addComponent(new HealthComponent(200));
     }
     else  if(type === 1){
         defender.addComponent(new ImageComponent("assets/sunflower_shot.png"));
@@ -142,6 +143,7 @@ function createDefender(type, x, y) {
         defender.addComponent(new DammageComponent(15));
         defender.addComponent(new ShootComponent(true));
         defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(20).build();
+        defender.addComponent(new HealthComponent(100));
     }
     else if(type === 2){
         defender.addComponent(new ImageComponent("assets/plant3.png"));
@@ -149,13 +151,14 @@ function createDefender(type, x, y) {
         defender.addComponent(new DammageComponent(30));
         defender.addComponent(new ShootComponent(true));
         defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(10).build();
+        defender.addComponent(new HealthComponent(300));
     }
       //added shoot builder component
   
     defender.addComponent(new ContextComponent(ctx));
     defender.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     defender.addComponent(new PositionComponent(x, y));
-    defender.addComponent(new HealthComponent(100));
+    
     defender.addComponent(new CollisionComponent(2, false));
     
     entityManager.add(defender);
