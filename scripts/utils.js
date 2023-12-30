@@ -171,7 +171,7 @@ export function handleGameStatus(gO) {
         temp_ctx.font = '60px Orbitron';
         temp_ctx.fillText('LEVEL COMPLETE', 130, 100);
         temp_ctx.font = '30px Orbitron';
-        temp_ctx.fillText('You completed the level ' + level-1, 134, 160);
+        temp_ctx.fillText('You completed the level ' + (level-1), 134, 160);
         entityManager.projectiles.clear();
         entityManager.zombies.clear();
         entityManager.resources.clear();
