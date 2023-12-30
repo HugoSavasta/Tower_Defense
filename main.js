@@ -360,7 +360,6 @@ function animate(currentTime) {
 
     if (!won && !gameOver && score > 1 && enemiesInterval <= 0 && entityManager.zombies.size === 0){
         setWon(true);
-        incLevel(1);
     }
 
     if (entityManager.resources.size > 0 && mouse.getComponent("PositionComponent").x && mouse.getComponent("PositionComponent").y){
