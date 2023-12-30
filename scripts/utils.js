@@ -1,3 +1,5 @@
+import {observer} from "./Observable.js";
+
 const canvas = document.getElementById("canvas");
 canvas.width = 900;
 canvas.height = 600;
@@ -119,24 +121,20 @@ import AllZombiesStopSoundSystem from "../systems/behaviours/AllZombiesStopSound
 
 export function resetGame() {
  
-
-    AllZombiesStopSoundSystem();
-    entityManager.defenders.clear();
-    entityManager.projectiles.clear();
-    entityManager.zombies.clear();
-    entityManager.resources.clear();
-    // observer.notify("Game Reset");  
- 
-    const tempCanvases = document.querySelectorAll('#temp_canvas');
-    tempCanvases.forEach((canvas) => {
-        canvas.parentNode.removeChild(canvas);
-    });
- 
     setScore(0);
     setGameOver(false);
     setWon(false);
     setResource(300);
     setLevel(1);
+
+    observer.notify("game reset");  
+   
+    const tempCanvases = document.querySelectorAll('#temp_canvas');
+    tempCanvases.forEach((canvas) => {
+        canvas.parentNode.removeChild(canvas);
+    });
+ 
+
 }
 export function handleGameStatus(gO) {
     
@@ -144,8 +142,9 @@ export function handleGameStatus(gO) {
     ctx.font = '30px Orbitron';
     ctx.fillText('Score: ' + score, 600, 30);
     ctx.fillText('Resources: ' + numberOfResources, 600, 60);
-
+ 
     if (gO) {
+
         const temp_canvas = document.createElement('canvas');
         temp_canvas.id = 'temp_canvas';
         temp_canvas.width = canvas.width;
@@ -158,7 +157,15 @@ export function handleGameStatus(gO) {
         temp_ctx.fillText('\n\nPress Space to Restart', 135, 160);
         setGameOver(gO);
         document.body.appendChild(temp_canvas);
-        setScore(0);
+        
+        setEnemiesInterval(700);
+
+        AllZombiesStopSoundSystem();
+        entityManager.defenders.clear();
+        entityManager.projectiles.clear();
+        entityManager.zombies.clear();
+        entityManager.resources.clear();
+
     }
 
     if (won && !gO) {

@@ -11,16 +11,20 @@ import {entityManager} from "../../scripts/EntityManager.js";
 
 function ShootSystem(delta, frame) {
     if (entityManager.zombies.size === 0) return;
-    let zombie = entityManager.zombies.entries().next().value[1];
-    if(zombie === undefined) return;
+    const zombie = entityManager.zombies.entries().next().value[1];
+    const zombies = Array.from(entityManager.zombies.values()); // convert values to an array
+    const randomZombie = zombies[Math.floor(Math.random() * zombies.length)]; // select a random index
+    if(randomZombie === undefined || zombie === undefined) return;
+    
     entityManager.defenders.forEach(entity => {   
         const shootComponent = entity.getComponent("ShootComponent");
         const dammageComponent = entity.getComponent("DammageComponent");
         if(shootComponent === undefined) return;        
         if(frame % (100 - shootComponent.shootDelay) === 0){
                 const positionComponent = entity.getComponent("PositionComponent");
-                const positionComponent2 = zombie.getComponent("PositionComponent");
-                const costComponent = entity.getComponent("CostComponent");
+                const positionComponent2 = Math.random() > 0.5 ? zombie.getComponent("PositionComponent") : randomZombie.getComponent("PositionComponent"); 
+                                                            
+             
                 let directionX = positionComponent2.x - positionComponent.x;
                 let directionY = positionComponent2.y - positionComponent.y;
             
@@ -41,16 +45,16 @@ function ShootSystem(delta, frame) {
 
                 if(dammageComponent.dammage >= 20){
                     type = 1;
-                    bulletVelocityX *= 10;
-                    bulletVelocityY *= 10;
+                    bulletVelocityX *= 10 * delta;
+                    bulletVelocityY *= 10 * delta;
                 }else if(dammageComponent.dammage >= 15){
                     type = 2;
-                    bulletVelocityX *= 15;
-                    bulletVelocityY *= 15;
+                    bulletVelocityX *= 15 * delta;
+                    bulletVelocityY *= 15 * delta;
                 }else{
                     type = 0;
-                    bulletVelocityX = 20;
-                    bulletVelocityY = 0;
+                    bulletVelocityX *= 20 * delta;
+                    bulletVelocityY *= 20 * delta;
                 }
                 projectile.addComponent(new VelocityComponent(bulletVelocityX, bulletVelocityY));
                 projectile.addComponent(new ProjectileComponent(type));

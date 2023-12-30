@@ -1,6 +1,7 @@
 import {ctx, canvas} from "./scripts/utils.js";
 import { observer } from "./scripts/Observable.js";
-import { won,setWon, level,incLevel, gameOver, enemiesInterval, decEnemiesInterval,  decResource, numberOfResources, FloatingMessage, floatingMessages,
+import { score, won, setWon, level, incLevel, gameOver, enemiesInterval, decEnemiesInterval,  
+    decResource, numberOfResources, FloatingMessage, floatingMessages,
    resetGame, handleFloatingMessages, handleGameStatus } from "./scripts/utils.js";
 
 import Entity from "./scripts/Entity.js";
@@ -170,7 +171,7 @@ function createZombie(x, y) {
     zombie.addComponent(new ImageComponent("assets/zombie.png"));
     zombie.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     zombie.addComponent(new PositionComponent(x, y));
-    let randomSpeed = 0.5
+    let randomSpeed = 5
     zombie.addComponent(new VelocityComponent(-randomSpeed, 0));
     let randomHealth = Math.floor(Math.random() * 50000 + 100000)
     zombie.addComponent(new HealthComponent(randomHealth));
@@ -230,18 +231,7 @@ function handleResources() {
 
 observer.subscribe((data) => {
     if(data){
-       if(data === "Game Over"){
-          
-       }
-       else if(data === "Space key pressed"){
-      
-       }
-       else if(data === "Scored"){
-      
-       }
-       else if(data === "Resource taken"){
-       
-       }
+     console.log(data);
     }
 });
 
@@ -337,7 +327,6 @@ for (let y = cellSize; y < canvas.height; y += cellSize) {
         cell.addComponent(new PositionComponent(x, y));
         cell.addComponent(new CollisionComponent(1, false));
         entityManager.add(cell);
-
     }
 }
 
@@ -361,19 +350,16 @@ function animate(currentTime) {
         ChooseDefenderBoarderRenderSystem(choosedDefender[0]);
     }
 
-    if(!won && !gameOver){
-        if (frame % enemiesInterval === 0 && entityManager.defenders.size > 0 
-            && enemiesInterval > 0) {
-           for (let i = 0; i < level; i++) {
-            let verticalPosition = Math.floor(Math.random() * 5) * cellSize+cellSize + cellGap;
-            createZombie(850 - Math.floor(Math.random() * 5), verticalPosition);
-           }
-           decEnemiesInterval(50);
-        }
+    if (frame % enemiesInterval === 0 && entityManager.defenders.size > 0 
+        && enemiesInterval > 0) {
+       for (let i = 0; i < level; i++) {
+        let verticalPosition = Math.floor(Math.random() * 5) * cellSize+cellSize + cellGap;
+        createZombie(850 - Math.floor(Math.random() * 5), verticalPosition);
+       }
+       decEnemiesInterval(50);
     }
-
-  
-    if (!won && enemiesInterval <= 0 && entityManager.zombies.size === 0){
+    
+    if (!won && !gameOver && score > 1 && enemiesInterval <= 0 && entityManager.zombies.size === 0){
         setWon(true);
         incLevel(1);
     }
