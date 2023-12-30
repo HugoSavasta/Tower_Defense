@@ -131,6 +131,7 @@ export function handleGameStatus(gO) {
     
     ctx.fillStyle = 'gold';
     ctx.font = '30px Orbitron';
+    ctx.fillText('Level: ' + level, 400, 30);
     ctx.fillText('Score: ' + score, 600, 30);
     ctx.fillText('Resources: ' + numberOfResources, 600, 60);
  
@@ -170,7 +171,7 @@ export function handleGameStatus(gO) {
         temp_ctx.font = '60px Orbitron';
         temp_ctx.fillText('LEVEL COMPLETE', 130, 100);
         temp_ctx.font = '30px Orbitron';
-        temp_ctx.fillText('You won with ' + score + ' points!', 134, 160);
+        temp_ctx.fillText('You completed the level ' + level, 134, 160);
         entityManager.projectiles.clear();
         entityManager.zombies.clear();
         entityManager.resources.clear();
