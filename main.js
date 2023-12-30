@@ -176,7 +176,7 @@ function createZombie(x, y) {
     zombie.addComponent(new PositionComponent(x, y));
     let randomSpeed = Math.random() * 0.5 + 1;
     zombie.addComponent(new VelocityComponent(-randomSpeed, 0));
-    let randomHealth = Math.floor(Math.random() * 50000 + 100000)
+    let randomHealth = Math.floor(Math.random() * 50 + 100)
     zombie.addComponent(new HealthComponent(randomHealth));
     zombie.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410, 30));
     zombie.addComponent(new CollisionComponent(2, false));
