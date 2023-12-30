@@ -5,7 +5,7 @@ class SoundComponent {
             src: [src],
             autoplay: false,
             loop: true,
-            volume: 0.1,
+            volume: 0.3,
             onend: function() {
             }
         });
