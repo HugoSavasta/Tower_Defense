@@ -181,7 +181,7 @@ function createZombie(x, y) {
     zombie.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410, 30));
     zombie.addComponent(new CollisionComponent(2, false));
     zombie.addComponent(new DammageComponent(10));
-    // zombie.addComponent(new SoundComponent("./sounds/zombie-horde.mp3"));
+    zombie.addComponent(new SoundComponent("./sounds/zombie-horde.mp3"));
     //added shoot builder component
     entityManager.add(zombie);
 }
