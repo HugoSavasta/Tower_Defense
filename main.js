@@ -137,7 +137,7 @@ function createDefender(type, x, y) {
         defender.addComponent(new AnimationComponent(0, 0, 0, 20, 21525/21, 1026, 99));
         defender.addComponent(new DammageComponent(15));
         defender.addComponent(new ShootComponent(true));
-        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(20).build();
+        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(60).build();
         defender.addComponent(new HealthComponent(100));
     }
     else if(type === 2){

@@ -21,8 +21,17 @@ function ShootSystem(delta, frame) {
         const dammageComponent = entity.getComponent("DammageComponent");
         if(shootComponent === undefined) return;        
         if(frame % (100 - shootComponent.shootDelay) === 0){
+                let positionComponent2; 
+                             
+                if(dammageComponent.dammage >= 20){
+                    positionComponent2 = randomZombie.getComponent("PositionComponent")
+                }else if(dammageComponent.dammage >= 15){
+                    positionComponent2 = randomZombie.getComponent("PositionComponent")
+                }else{
+                    positionComponent2 = zombie.getComponent("PositionComponent")
+                }
                 const positionComponent = entity.getComponent("PositionComponent");
-                const positionComponent2 = Math.random() > 0.5 ? zombie.getComponent("PositionComponent") : randomZombie.getComponent("PositionComponent"); 
+                //const positionComponent2 = Math.random() > 0.5 ? zombie.getComponent("PositionComponent") : randomZombie.getComponent("PositionComponent"); 
                                                             
              
                 let directionX = positionComponent2.x - positionComponent.x;
@@ -45,8 +54,8 @@ function ShootSystem(delta, frame) {
 
                 if(dammageComponent.dammage >= 20){
                     type = 1;
-                    bulletVelocityX *= 10 * delta;
-                    bulletVelocityY *= 10 * delta;
+                    bulletVelocityX *= 100 * delta;
+                    bulletVelocityY *= 100 * delta;
                 }else if(dammageComponent.dammage >= 15){
                     type = 2;
                     bulletVelocityX *= 15 * delta;
