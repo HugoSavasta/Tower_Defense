@@ -259,6 +259,7 @@ canvas.addEventListener('click', function() {
  
     const gridPositionX = pos.x - (pos.x % cellSize) + cellGap;
     const gridPositionY = pos.y - (pos.y % cellSize) + cellGap;
+    if(gridPositionX === undefined || gridPositionY === undefined) return;
     if(gridPositionY < cellSize) return;
     if(!MouseDefenderCollisionSystem(
         gridPositionX,
