@@ -31,7 +31,7 @@ function ShootSystem(delta, frame) {
                     positionComponent2 = zombie.getComponent("PositionComponent")
                 }
                 const positionComponent = entity.getComponent("PositionComponent");
-                //const positionComponent2 = Math.random() > 0.5 ? zombie.getComponent("PositionComponent") : randomZombie.getComponent("PositionComponent"); 
+                
                                                             
              
                 let directionX = positionComponent2.x - positionComponent.x;
