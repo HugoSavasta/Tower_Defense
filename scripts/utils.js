@@ -1,4 +1,5 @@
 import {observer} from "./Observable.js";
+import { floatingMessages } from "./constants.js";
 
 const canvas = document.getElementById("canvas");
 canvas.width = 900;
@@ -56,7 +57,7 @@ export function handleFloatingMessages() {
 };
 
 
-export const floatingMessages = [];
+
 export let numberOfResources = 300;
 
 export function setResource(value) {

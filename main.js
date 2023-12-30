@@ -1,7 +1,8 @@
 import {ctx, canvas} from "./scripts/utils.js";
+import {cellSize, cellGap, frame_interval, floatingMessages} from "./scripts/constants.js";
 import { observer } from "./scripts/Observable.js";
 import { score, won, setWon, level, incLevel, gameOver, enemiesInterval, decEnemiesInterval,  
-    decResource, numberOfResources, FloatingMessage, floatingMessages,
+    decResource, numberOfResources, FloatingMessage,
    resetGame, handleFloatingMessages, handleGameStatus } from "./scripts/utils.js";
 
 import Entity from "./scripts/Entity.js";
@@ -75,8 +76,7 @@ const systems = [
 
 
 
-const cellSize = 100;
-const cellGap = 3;
+
 
 
 const mouse = new Entity("Mouse");
@@ -84,12 +84,7 @@ mouse.addComponent(new PositionComponent(0, 0));
 mouse.addComponent(new SizeComponent(0.1, 0.1));
 
 let frame = 0
-
-
-let frames_per_second = 60;
 let previousTime = performance.now();
-
-let frame_interval = 1000 / frames_per_second;
 let delta_time_multiplier = 1;
 let delta_time = 0;
 
