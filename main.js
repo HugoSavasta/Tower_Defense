@@ -142,7 +142,7 @@ function createDefender(type, x, y) {
     }
     else if(type === 2){
         defender.addComponent(new ImageComponent("assets/plant3.png"));
-        defender.addComponent(new AnimationComponent(0, 0, 0, 1, 761/2, 274, 60));
+        defender.addComponent(new AnimationComponent(0, 0, 0, 1, 735/2, 277, 60));
         defender.addComponent(new DammageComponent(10));
         defender.addComponent(new ShootComponent(true));
         defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(10).build();
