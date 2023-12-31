@@ -19,7 +19,7 @@ function ShootSystem(delta, frame) {
     entityManager.defenders.forEach(entity => {   
         const shootComponent = entity.getComponent("ShootComponent");
         const dammageComponent = entity.getComponent("DammageComponent");
-        if(shootComponent === undefined) return;        
+        if(shootComponent === undefined || dammageComponent === undefined) return;        
         if(frame % (100 - shootComponent.shootDelay) === 0){
                 let positionComponent2; 
                 let type = 0;

@@ -23,7 +23,8 @@ function ChooseDefenderRenderSystem (delta, frame) {
         const imageComponent = entity.getComponent("ImageComponent");
         const costComponent = entity.getComponent("CostComponent");
             
-        if (positionComponent === undefined || contextComponent === undefined) return;
+        if (positionComponent === undefined || contextComponent === undefined || 
+            imageComponent === undefined || costComponent === undefined) return;
 
    
         if (entity.name === "Choose_plant_1") {

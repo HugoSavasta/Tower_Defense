@@ -7,7 +7,8 @@ function CellRenderSystem (delta, frame) {
         const contextComponent = entity.getComponent("ContextComponent");
         const sizeComponent = entity.getComponent("SizeComponent");
         const collisionComponent = entity.getComponent("CollisionComponent");
-        if (collisionComponent === undefined && positionComponent === undefined || contextComponent === undefined || sizeComponent === undefined) return;
+        if (collisionComponent === undefined && positionComponent === undefined || 
+            contextComponent === undefined || sizeComponent === undefined || contextComponent === undefined) return;
         contextComponent.context.strokeStyle = "black";
         contextComponent.context.lineWidth = 1;
         contextComponent.context.strokeRect(
