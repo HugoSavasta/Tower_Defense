@@ -127,7 +127,7 @@ function createDefender(type, x, y) {
     if(type === 0){
         defender.addComponent(new ImageComponent("assets/plant.png"));
         defender.addComponent(new AnimationComponent(0, 0, 0, 1, 167, 243, 60));
-        defender.addComponent(new DammageComponent(10));
+        defender.addComponent(new DammageComponent(20));
         defender.addComponent(new ShootComponent(true));
         defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(2).build();
         defender.addComponent(new HealthComponent(200));
@@ -135,7 +135,7 @@ function createDefender(type, x, y) {
     else  if(type === 1){
         defender.addComponent(new ImageComponent("assets/sunflower_shot.png"));
         defender.addComponent(new AnimationComponent(0, 0, 0, 20, 21525/21, 1026, 99));
-        defender.addComponent(new DammageComponent(15));
+        defender.addComponent(new DammageComponent(30));
         defender.addComponent(new ShootComponent(true));
         defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(60).build();
         defender.addComponent(new HealthComponent(100));
@@ -143,10 +143,10 @@ function createDefender(type, x, y) {
     else if(type === 2){
         defender.addComponent(new ImageComponent("assets/plant3.png"));
         defender.addComponent(new AnimationComponent(0, 0, 0, 1, 761/2, 274, 60));
-        defender.addComponent(new DammageComponent(30));
+        defender.addComponent(new DammageComponent(10));
         defender.addComponent(new ShootComponent(true));
         defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(10).build();
-        defender.addComponent(new HealthComponent(300));
+        defender.addComponent(new HealthComponent(500));
     }
       //added shoot builder component
   

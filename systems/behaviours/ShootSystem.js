@@ -22,12 +22,15 @@ function ShootSystem(delta, frame) {
         if(shootComponent === undefined) return;        
         if(frame % (100 - shootComponent.shootDelay) === 0){
                 let positionComponent2; 
-                             
+                let type = 0;
+
                 if(dammageComponent.dammage >= 20){
-                    positionComponent2 = randomZombie.getComponent("PositionComponent")
-                }else if(dammageComponent.dammage >= 15){
+                    positionComponent2 = zombie.getComponent("PositionComponent")
+                }else if(dammageComponent.dammage >= 30){
+                    type = 1;
                     positionComponent2 = randomZombie.getComponent("PositionComponent")
                 }else{
+                    type = 2;
                     positionComponent2 = zombie.getComponent("PositionComponent")
                 }
                 const positionComponent = entity.getComponent("PositionComponent");
@@ -50,18 +53,15 @@ function ShootSystem(delta, frame) {
                 projectile.addComponent(new CollisionComponent(3, false));
                 let bulletVelocityX = directionX;
                 let bulletVelocityY = directionY;
-                let type = 0;
+               
 
-                if(dammageComponent.dammage >= 20){
-                    type = 1;
+                if(type === 1){
                     bulletVelocityX *= 100 * delta;
                     bulletVelocityY *= 100 * delta;
-                }else if(dammageComponent.dammage >= 15){
-                    type = 2;
+                }else if(type === 2){
                     bulletVelocityX *= 15 * delta;
                     bulletVelocityY *= 15 * delta;
                 }else{
-                    type = 0;
                     bulletVelocityX *= 20 * delta;
                     bulletVelocityY *= 20 * delta;
                 }
