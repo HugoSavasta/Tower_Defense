@@ -7,6 +7,7 @@ function ProjectileRenderSystem (delta, frame) {
         const contextComponent = entity.getComponent("ContextComponent");
         if (projectileComponent === undefined && positionComponent === undefined 
             || contextComponent === undefined) return;
+            
         if(projectileComponent.type === 0){
             contextComponent.context.fillStyle = 'black';
         }
