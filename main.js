@@ -146,7 +146,7 @@ function createDefender(type, x, y) {
         defender.addComponent(new DammageComponent(10));
         defender.addComponent(new ShootComponent(true));
         defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(10).build();
-        defender.addComponent(new HealthComponent(500));
+        // defender.addComponent(new HealthComponent(500));
     }
       //added shoot builder component
   

@@ -18,7 +18,7 @@ function ShootSystem(delta, frame) {
     
     entityManager.defenders.forEach(entity => {   
         const shootComponent = entity.getComponent("ShootComponent");
-        const dammageComponent = entity.getComponent("DammageComponent");
+      
         const positionComponent = entity.getComponent("PositionComponent");
         const random_position2 = randomZombie.getComponent("PositionComponent");
         const positionComponent2 = zombie.getComponent("PositionComponent");
@@ -28,32 +28,34 @@ function ShootSystem(delta, frame) {
             positionComponent2 === undefined){
                 return;
             }     
-          
+   
         if(frame % (100 - shootComponent.shootDelay) === 0){
-            
+
                 let directionX;
                 let directionY;
                 let type;
-                if (dammageComponent.dammage >= 30){
+                if(entity.getComponent("DammageComponent") === undefined) {
+                    const dammageComponent = entity.getComponent("DammageComponent");
+                    if (dammageComponent.dammage >= 30){
                   
-                    type = 1;
-                    directionX = random_position2.x - positionComponent.x;
-                    directionY = random_position2.y - positionComponent.y;
+                        type = 1;
+                        directionX = random_position2.x - positionComponent.x;
+                        directionY = random_position2.y - positionComponent.y;
+                    }
+                    else if(dammageComponent.dammage >= 20){
+                       
+                        type = 0;
+                        directionX = positionComponent2.x - positionComponent.x;
+                        directionY = positionComponent2.y - positionComponent.y;
+                    }
+                    else if(dammageComponent.dammage >= 10){
+                        type = 2;
+                        directionX = random_position2.x - positionComponent.x;
+                        directionY = random_position2.y - positionComponent.y;
+                    }
                 }
-                else if(dammageComponent.dammage >= 20){
-                   
-                    type = 0;
-                    directionX = positionComponent2.x - positionComponent.x;
-                    directionY = positionComponent2.y - positionComponent.y;
-                }
-                else if(dammageComponent.dammage >= 10){
-                    type = 2;
-                    directionX = random_position2.x - positionComponent.x;
-                    directionY = random_position2.y - positionComponent.y;
-                }
+
                 
-                
-            
                 const magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
                 directionX /= magnitude;
                 directionY /= magnitude;

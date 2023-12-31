@@ -10,14 +10,12 @@ function DefenderRenderSystem (delta, frame) {
         const sizeComponent = entity.getComponent("SizeComponent");
         const imageComponent = entity.getComponent("ImageComponent");
         if (positionComponent === undefined || contextComponent === undefined ||
-             animationComponent === undefined || healthComponent === undefined || 
+             animationComponent === undefined ||
              sizeComponent === undefined || imageComponent === undefined) return;
         contextComponent.context.fillStyle = 'gold';
         contextComponent.context.font = '30px Orbitron';
  
-        contextComponent.context.fillText(
-            Math.floor(healthComponent.health),
-            positionComponent.x + 15, positionComponent.y - 10);
+
           
         contextComponent.context.drawImage(imageComponent.image, 
             animationComponent.frameX * animationComponent.spriteWidth,
@@ -35,6 +33,10 @@ function DefenderRenderSystem (delta, frame) {
             }
             else animationComponent.frameX = animationComponent.minFrame;
         }
+        if (healthComponent === undefined) return;
+        contextComponent.context.fillText(
+            Math.floor(healthComponent.health),
+            positionComponent.x + 15, positionComponent.y - 10);
     });
 }
 

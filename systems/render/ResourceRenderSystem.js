@@ -7,11 +7,15 @@ function ResourceRenderSystem (delta, frame) {
         const contextComponent = entity.getComponent("ContextComponent");
         const sizeComponent = entity.getComponent("SizeComponent");
         const text = entity.getComponent("TextComponent");
+
         if (positionComponent === undefined || contextComponent === undefined || 
-            sizeComponent === undefined || text === undefined) return;
+            sizeComponent === undefined) return;
+
         contextComponent.context.fillStyle = 'yellow';
         contextComponent.context.fillRect(positionComponent.x, positionComponent.y, 
             sizeComponent.width, sizeComponent.height);
+        
+        if (text === undefined) return;
         contextComponent.context.fillStyle = 'black';
         contextComponent.context.font = '20px Orbitron';
         contextComponent.context.fillText(text.text, positionComponent.x + 15,

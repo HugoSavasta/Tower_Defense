@@ -22,7 +22,7 @@ function ZombieRenderSystem (delta, frame) {
         const imageComponent = entity.getComponent("ImageComponent");
 
         if (positionComponent === undefined || contextComponent === undefined || 
-            animationComponent === undefined || healthComponent === undefined ||
+            animationComponent === undefined ||
              sizeComponent === undefined || imageComponent === undefined) return;
         contextComponent.context.drawImage(imageComponent.image, 
             animationComponent.frameX * animationComponent.spriteWidth, 0, 
@@ -30,31 +30,41 @@ function ZombieRenderSystem (delta, frame) {
             positionComponent.x, positionComponent.y, sizeComponent.width, 
         sizeComponent.height);
 
-        contextComponent.context.save(); // Save the current transformation matrix
-
-        // Scale the context to make the drawing two times bigger
-        contextComponent.context.scale(2, 2);
         
-        // Translate the scaled context
+        if (frame % 5 === 0) { 
+            if (animationComponent.frameX < animationComponent.maxFrame) {
+                animationComponent.frameX++;
+            }else {
+                animationComponent.frameX = animationComponent.minFrame;
+            }
+        }
+        if (healthComponent === undefined ) return;
+        contextComponent.context.save(); 
+
+        contextComponent.context.scale(2, 2);
+            
+      
+
         let x = positionComponent.x + 65;
         let hy = positionComponent.y + 30;
-        contextComponent.context.translate( x / 2, hy / 2); // Adjusted translation
+        contextComponent.context.translate( x / 2, hy / 2);
         
-        // Set stroke style for the background line
+
         contextComponent.context.strokeStyle = 'rgba(120, 120, 120, 0.5)';
-        contextComponent.context.lineWidth = 4; // Adjust line width for the scaled context
+        contextComponent.context.lineWidth = 4; 
         
         const y = -20 * 1.2;
         const xStart = -20;
         const xEnd = 8;
         
-        // Draw the background line
+
         contextComponent.context.beginPath();
         contextComponent.context.moveTo(xStart, y);
         contextComponent.context.lineTo(xEnd, y);
         contextComponent.context.stroke();
         
-        // Set stroke style for the health line
+      
+
         if(healthComponent.health > 50){
             contextComponent.context.strokeStyle = 'rgba(0, 100, 50, 1)';
         }else if(healthComponent.health > 25){
@@ -64,7 +74,7 @@ function ZombieRenderSystem (delta, frame) {
         }
   
         
-        // Draw the health line based on the current health
+   
         const healthX = mapValue(healthComponent.health, 0, 100, xStart, xEnd, true);
         
         contextComponent.context.beginPath();
@@ -72,16 +82,9 @@ function ZombieRenderSystem (delta, frame) {
         contextComponent.context.lineTo(healthX, y);
         contextComponent.context.stroke();
         
-        contextComponent.context.restore(); // Restore the saved transformation matrix
+        contextComponent.context.restore(); 
         
 
-        if (frame % 5 === 0) { // change the number for more or less speed
-            if (animationComponent.frameX < animationComponent.maxFrame) {
-                animationComponent.frameX++;
-            }else {
-                animationComponent.frameX = animationComponent.minFrame;
-            }
-        }
     });
 }
 
