@@ -387,7 +387,6 @@ function animate(currentTime) {
     if (entityManager.zombies.size > 0) {
         handleResources();
     }
-    console.log(entityManager.zombies_sound.size);
     requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);

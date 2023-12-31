@@ -136,7 +136,7 @@ export function handleGameStatus(gO) {
     ctx.fillText('Resources: ' + numberOfResources, 600, 60);
  
     if (gO) {
-
+        observer.notify("game over");
         const temp_canvas = document.createElement('canvas');
         temp_canvas.id = 'temp_canvas';
         temp_canvas.width = canvas.width;
@@ -161,6 +161,7 @@ export function handleGameStatus(gO) {
     }
 
     if (won && !gO) {
+        observer.notify("game won");
         AllZombiesStopSoundSystem();
         const temp_canvas2 = document.createElement('canvas');
         temp_canvas2.id = 'temp_canvas';
