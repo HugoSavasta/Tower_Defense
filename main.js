@@ -167,15 +167,18 @@ let choosedDefender = [];
 
 function createZombie(x, y) {
     const zombie = new Entity("Zombie");
+
     zombie.addComponent(new ContextComponent(ctx));
     zombie.addComponent(new ImageComponent("assets/zombie.png"));
+    zombie.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410, 30));
+
     zombie.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     zombie.addComponent(new PositionComponent(x, y));
     let randomSpeed = Math.random() * 1.1 + 1;
     zombie.addComponent(new VelocityComponent(-randomSpeed, 0));
 
     zombie.addComponent(new HealthComponent(100));
-    zombie.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410, 30));
+   
     zombie.addComponent(new CollisionComponent(2, false));
     zombie.addComponent(new DammageComponent(10));
 

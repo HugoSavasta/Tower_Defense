@@ -24,6 +24,7 @@ function ZombieRenderSystem (delta, frame) {
         if (positionComponent === undefined || contextComponent === undefined || 
             animationComponent === undefined ||
              sizeComponent === undefined || imageComponent === undefined) return;
+    
         contextComponent.context.drawImage(imageComponent.image, 
             animationComponent.frameX * animationComponent.spriteWidth, 0, 
             animationComponent.spriteWidth, animationComponent.spriteHeight, 
