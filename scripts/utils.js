@@ -108,7 +108,7 @@ export function incLevel(value) {
 }
 
 import {entityManager} from "./EntityManager.js";
-import AllZombiesStopSoundSystem from "../systems/behaviours/AllZombiesStopSoundSystem.js";
+import AllZombiesStopSoundSystem from "../systems/behaviors/AllZombiesStopSoundSystem.js";
 
 export function resetGame() {
  
@@ -174,7 +174,9 @@ export function handleGameStatus(gO) {
         temp_ctx.fillText('You completed the level ' + (level-1), 134, 160);
         entityManager.projectiles.clear();
         entityManager.zombies.clear();
+        entityManager.zombies_sound.clear();
         entityManager.resources.clear();
+      
         
         document.body.appendChild(temp_canvas2);
         setTimeout(() => {

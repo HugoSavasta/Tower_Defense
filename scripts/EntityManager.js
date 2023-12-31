@@ -7,6 +7,7 @@ class EntityManager {
         this.cells = new Map();
         this.chooses = new Map();
         this.mouses = new Map();
+        this.zombies_sound = new Map();
     }
     add(entity){
         if(entity === undefined) {
@@ -29,7 +30,10 @@ class EntityManager {
             this.chooses.set(entity.id, entity);
         } else if(entity.name.startsWith("Mouse")) {
             this.mouses.set(entity.id, entity);
+        } else if(entity.name.startsWith("ZombieSound")) {
+            this.zombies_sound.set(entity.id, entity);
         }
+         
     }
 
     remove(entity){
@@ -51,6 +55,8 @@ class EntityManager {
             this.chooses.delete(entity.id, entity);
         } else if(entity.name.startsWith("Mouse")) {
             this.mouses.delete(entity.id, entity);
+        } else if(entity.name.startsWith("ZombieSound")) {
+            this.zombies_sound.delete(entity.id, entity);
         }
     }
 }

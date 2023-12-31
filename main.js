@@ -47,12 +47,10 @@ import ZombieRenderSystem from "./systems/render/ZombieRenderSystem.js";
 import ChooseDefenderBoarderRenderSystem from "./systems/render/ChooseDefenderBoarderRenderSystem.js";
 
 // behaviour system
-import ShootSystem from "./systems/behaviours/ShootSystem.js";
-import ZombieLifeSystem from "./systems/behaviours/ZombieLifeSystem.js";
-import DefenderLifeSystem from "./systems/behaviours/DefenderLifeSystem.js";
-import ZombieSoundSystem from "./systems/behaviours/ZombieSoundSystem.js";
-import AllZombiesStopSoundSystem from "./systems/behaviours/AllZombiesStopSoundSystem.js";
-
+import ShootSystem from "./systems/behaviors/ShootSystem.js";
+import ZombieLifeSystem from "./systems/behaviors/ZombieLifeSystem.js";
+import DefenderLifeSystem from "./systems/behaviors/DefenderLifeSystem.js";
+import ZombieSoundSystem from "./systems/behaviors/ZombieSoundSystem.js";
 
 
 const systems = [
@@ -176,9 +174,15 @@ function createZombie(x, y) {
     zombie.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410, 30));
     zombie.addComponent(new CollisionComponent(2, false));
     zombie.addComponent(new DammageComponent(10));
-    zombie.addComponent(new SoundComponent("./sounds/Horde.mp3"));
+
     //added shoot builder component
     entityManager.add(zombie);
+    if (entityManager.zombies_sound.size <= 10){
+        const zombieSound = new Entity("ZombieSound");
+        zombieSound.addComponent(new SoundComponent("./sounds/Horde.mp3"));
+        entityManager.add(zombieSound);
+    }
+
 }
 
 let canvasPosition = canvas.getBoundingClientRect();
@@ -383,7 +387,7 @@ function animate(currentTime) {
     if (entityManager.zombies.size > 0) {
         handleResources();
     }
-
+    console.log(entityManager.zombies_sound.size);
     requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);
