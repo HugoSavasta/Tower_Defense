@@ -86,10 +86,13 @@ let previousTime = performance.now();
 let delta_time_multiplier = 1;
 let delta_time = 0;
 
+const plant_img = new ImageComponent("assets/plant.png")
+const plant2_img = new ImageComponent("assets/sunflower_shot.png")
+const plant3_img = new ImageComponent("assets/plant3.png")
 
 const plant = new Entity("Choose_plant_1");
 plant.addComponent(new ContextComponent(ctx));
-plant.addComponent(new ImageComponent("assets/plant.png"));
+plant.addComponent(plant_img);
 plant.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
 plant.addComponent(new PositionComponent(0, 0));
 plant.addComponent(new CostComponent(100));
@@ -100,7 +103,7 @@ entityManager.add(plant);
 const plant2 = new Entity("Choose_plant_2");
 plant2.addComponent(new ContextComponent(ctx));
 plant2.addComponent(new CollisionComponent());
-plant2.addComponent(new ImageComponent("assets/sunflower_shot.png"));
+plant2.addComponent(plant2_img);
 plant2.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
 plant2.addComponent(new PositionComponent(100, 0));
 plant2.addComponent(new CostComponent(200));
@@ -108,12 +111,13 @@ entityManager.add(plant2);
 
 const plant3 = new Entity("Choose_plant_3");
 plant3.addComponent(new ContextComponent(ctx));
-plant3.addComponent(new ImageComponent("assets/plant3.png"));
+plant3.addComponent(plant3_img);
 plant3.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
 plant3.addComponent(new PositionComponent(200, 0));
 plant3.addComponent(new CostComponent(300));
 plant3.addComponent(new CollisionComponent());
 entityManager.add(plant3);
+
 
 
 
@@ -123,28 +127,28 @@ function createDefender(type, x, y) {
 
 
     if(type === 0){
-        defender.addComponent(new ImageComponent("assets/plant.png"));
+        defender.addComponent(plant_img);
         defender.addComponent(new AnimationComponent(0, 0, 0, 1, 167, 243, 60));
         defender.addComponent(new DammageComponent(20));
         defender.addComponent(new ShootComponent(true));
-        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(2).build();
-        defender.addComponent(new HealthComponent(200));
+        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(200).build();
+        defender.addComponent(new HealthComponent(100));
     }
     else  if(type === 1){
-        defender.addComponent(new ImageComponent("assets/sunflower_shot.png"));
-        defender.addComponent(new AnimationComponent(0, 0, 0, 20, 21525/21, 1026, 99));
+        defender.addComponent(plant2_img);
+        defender.addComponent(new AnimationComponent(0, 0, 0, 20, 21525/21, 1026, 90));
         defender.addComponent(new DammageComponent(30));
         defender.addComponent(new ShootComponent(true));
-        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(60).build();
+        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(200).build();
         defender.addComponent(new HealthComponent(100));
     }
     else if(type === 2){
-        defender.addComponent(new ImageComponent("assets/plant3.png"));
+        defender.addComponent(plant3_img);
         defender.addComponent(new AnimationComponent(0, 0, 0, 1, 735/2, 277, 60));
         defender.addComponent(new DammageComponent(10));
         defender.addComponent(new ShootComponent(true));
-        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(10).build();
-        defender.addComponent(new HealthComponent(500));
+        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(200).build();
+        defender.addComponent(new HealthComponent(300));
     }
       
   
@@ -167,10 +171,10 @@ function createZombie(x, y) {
     zombie.addComponent(new ImageComponent("assets/zombie.png"));
     zombie.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
     zombie.addComponent(new PositionComponent(x, y));
-    let randomSpeed = Math.random() * 0.5 + 1;
+    let randomSpeed = Math.random() * 1.1 + 1;
     zombie.addComponent(new VelocityComponent(-randomSpeed, 0));
-    let randomHealth = Math.floor(Math.random() * 40 + 80)
-    zombie.addComponent(new HealthComponent(randomHealth));
+
+    zombie.addComponent(new HealthComponent(100));
     zombie.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410, 30));
     zombie.addComponent(new CollisionComponent(2, false));
     zombie.addComponent(new DammageComponent(10));

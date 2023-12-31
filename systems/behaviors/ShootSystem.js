@@ -73,8 +73,8 @@ function ShootSystem(delta, frame) {
                
 
                 if(type === 1){
-                    bulletVelocityX *= 50 * delta;
-                    bulletVelocityY *= 50 * delta;
+                    bulletVelocityX *= 30 * delta;
+                    bulletVelocityY *= 30 * delta;
                 }else if(type === 2){
                     bulletVelocityX *= 15 * delta;
                     bulletVelocityY *= 15 * delta;
