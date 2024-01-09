@@ -6,7 +6,7 @@ function ProjectileMovementSystem(delta, frame) {
             const positionComponent = entity.getComponent("PositionComponent");
             const projectileComponent = entity.getComponent("ProjectileComponent");
             const velocityComponent = entity.getComponent("VelocityComponent");
-            if (projectileComponent === undefined && positionComponent === undefined 
+            if (projectileComponent === undefined || positionComponent === undefined 
                 || velocityComponent === undefined) return;
             positionComponent.x += velocityComponent.x * delta;
             positionComponent.y += velocityComponent.y * delta;

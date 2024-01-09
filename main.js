@@ -131,7 +131,9 @@ function createDefender(type, x, y) {
         defender.addComponent(new AnimationComponent(0, 0, 0, 1, 167, 243, 60));
         defender.addComponent(new DammageComponent(20));
         defender.addComponent(new ShootComponent(true));
-        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(200).build();
+        if(defender.getComponent("ShootComponent")){
+            defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(210).build();
+        }
         defender.addComponent(new HealthComponent(100));
     }
     else  if(type === 1){
@@ -139,7 +141,9 @@ function createDefender(type, x, y) {
         defender.addComponent(new AnimationComponent(0, 0, 0, 2, 690, 800, 60));
         defender.addComponent(new DammageComponent(30));
         defender.addComponent(new ShootComponent(true));
-        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(200).build();
+        if(defender.getComponent("ShootComponent")){
+            defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(200).build();
+        }
         defender.addComponent(new HealthComponent(100));
     }
     else if(type === 2){
@@ -147,14 +151,16 @@ function createDefender(type, x, y) {
         defender.addComponent(new AnimationComponent(0, 0, 0, 1, 735/2, 277, 60));
         defender.addComponent(new DammageComponent(10));
         defender.addComponent(new ShootComponent(true));
-        defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(200).build();
+        if(defender.getComponent("ShootComponent")){
+            defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(190).build();
+        }
         defender.addComponent(new HealthComponent(300));
     }
       
   
     defender.addComponent(new ContextComponent(ctx));
     defender.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
-    defender.addComponent(new PositionComponent(x, y));
+    // defender.addComponent(new PositionComponent(x, y));
     
     defender.addComponent(new CollisionComponent(2, false));
     

@@ -56,6 +56,10 @@ function ShootSystem(delta, frame) {
                     type = 2;
                     directionX = random_position2.x - positionComponent.x;
                     directionY = random_position2.y - positionComponent.y;
+                }else{
+                    type = 0;
+                    directionX = positionComponent2.x - positionComponent.x;
+                    directionY = positionComponent2.y - positionComponent.y;
                 }
                 const magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
                 directionX /= magnitude;

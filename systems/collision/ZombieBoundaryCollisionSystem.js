@@ -8,7 +8,7 @@ function ZombieBoundaryCollisionSystem () {
         const sizeComponent = entity.getComponent("SizeComponent");
         const velocityComponent = entity.getComponent("VelocityComponent");
         const soundComponent = entity.getComponent("SoundComponent");
-        if (collisionComponent === undefined && positionComponent === undefined 
+        if (collisionComponent === undefined || positionComponent === undefined 
             || sizeComponent === undefined || velocityComponent === undefined) return;
         if(velocityComponent.x === 0){
             velocityComponent.x = velocityComponent.old_x;

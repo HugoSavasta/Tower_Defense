@@ -6,7 +6,7 @@ function MouseCellCollisionSystemSystem(mouseX, mouseY, mouseWidth, mouseHeight)
         const positionComponent = entity.getComponent("PositionComponent");
         const sizeComponent = entity.getComponent("SizeComponent");
         const collisionComponent = entity.getComponent("CollisionComponent");
-        if (mouseX && mouseY && collisionComponent === undefined && 
+        if (mouseX && mouseY && collisionComponent === undefined ||
             positionComponent === undefined || sizeComponent === undefined) return;
         if (collisionComponent){
             collisionComponent.collide = false;

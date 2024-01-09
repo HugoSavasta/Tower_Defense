@@ -5,7 +5,8 @@ function ProjectileRenderSystem (delta, frame) {
         const projectileComponent = entity.getComponent("ProjectileComponent");
         const positionComponent = entity.getComponent("PositionComponent");
         const contextComponent = entity.getComponent("ContextComponent");
-        if (projectileComponent === undefined && positionComponent === undefined 
+       
+        if (positionComponent === undefined 
             || contextComponent === undefined) return;
             
         if(projectileComponent.type === 0){
@@ -18,6 +19,8 @@ function ProjectileRenderSystem (delta, frame) {
         else if(projectileComponent.type === 2)
         {
             contextComponent.context.fillStyle = 'red';
+        }else{
+            contextComponent.context.fillStyle = 'black';
         }
         contextComponent.context.beginPath();
         contextComponent.context.arc(positionComponent.x, 
