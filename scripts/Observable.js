@@ -1,19 +1,37 @@
-class Observable {
-    constructor() {
-      this.observers = [];
-    }
-  
-    subscribe(func) {
-      this.observers.push(func);
-    }
-  
-    unsubscribe(func) {
-      this.observers = this.observers.filter((observer) => observer !== func);
-    }
-  
-    notify(data) {
-      this.observers.forEach((observer) => observer(data));
-    }
+export class Observer {
+  constructor(name) {
+
+      if (Observer.instance) {
+        return Observer.instance;
+      }
+      Observer.instance = this;
+      this.name = name;
+      
+  }
+
+  notify(eventData) {
+      console.log(`${this.name} received notification:`, eventData);
+  }
 }
 
-export const observer = new Observable();
+
+class Publisher {
+  constructor() {
+      this.observers = [];
+  }
+
+  subscribe(observer) {
+      this.observers.push(observer);
+  }
+
+  unsubscribe(observer) {
+      this.observers = this.observers.filter(subscriber => subscriber !== observer);
+  }
+
+  notifyObservers(eventData) {
+      this.observers.forEach(observer => observer.notify(eventData));
+  }
+}
+
+
+export const zombiePublisher = new Publisher();

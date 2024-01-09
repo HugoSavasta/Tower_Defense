@@ -1,6 +1,6 @@
 import {ctx, canvas} from "./scripts/utils.js";
 import {cellSize, cellGap, frame_interval, floatingMessages} from "./scripts/constants.js";
-import { observer } from "./scripts/Observable.js";
+import { zombiePublisher } from "./scripts/Observable.js";
 import { score, won, setWon, level, incLevel, gameOver, enemiesInterval, decEnemiesInterval,  
     decResource, numberOfResources, FloatingMessage,
    resetGame, handleFloatingMessages, handleGameStatus } from "./scripts/utils.js";
@@ -166,7 +166,7 @@ function createDefender(type, x, y) {
     
     entityManager.add(defender);
 
-    observer.notify("Defender created at " + x + " " + y);
+
 }
 
 let choosedDefender = [];
@@ -195,7 +195,6 @@ function createZombie(x, y) {
         zombieSound.addComponent(new SoundComponent("./sounds/Horde.mp3"));
         entityManager.add(zombieSound);
     }
-
 }
 
 let canvasPosition = canvas.getBoundingClientRect();
@@ -244,11 +243,6 @@ function handleResources() {
 
 
 
-observer.subscribe((data) => {
-    if(data){
-     console.log(data);
-    }
-});
 
 
 canvas.addEventListener('click', function() {

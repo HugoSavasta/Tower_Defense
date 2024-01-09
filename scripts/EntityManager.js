@@ -1,5 +1,10 @@
 class EntityManager {
+
     constructor() {
+        if(EntityManager.instance) {
+            return EntityManager.instance;
+        }
+        EntityManager.instance = this;
         this.defenders = new Map();
         this.zombies = new Map();
         this.projectiles = new Map();
@@ -9,6 +14,7 @@ class EntityManager {
         this.mouses = new Map();
         this.zombies_sound = new Map();
     }
+
     add(entity){
         if(entity === undefined) {
             console.log("Cannot add undefined entity");
@@ -32,8 +38,7 @@ class EntityManager {
             this.mouses.set(entity.id, entity);
         } else if(entity.name.startsWith("ZombieSound")) {
             this.zombies_sound.set(entity.id, entity);
-        }
-         
+        }    
     }
 
     remove(entity){

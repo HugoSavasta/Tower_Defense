@@ -1,4 +1,3 @@
-import {observer} from "./Observable.js";
 import { floatingMessages } from "./constants.js";
 
 const canvas = document.getElementById("canvas");
@@ -118,7 +117,7 @@ export function resetGame() {
     setResource(300);
     setLevel(1);
 
-    observer.notify("game reset");  
+
     AllZombiesStopSoundSystem();
     entityManager.defenders.clear();
     entityManager.projectiles.clear();
