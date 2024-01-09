@@ -160,7 +160,7 @@ function createDefender(type, x, y) {
   
     defender.addComponent(new ContextComponent(ctx));
     defender.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
-    // defender.addComponent(new PositionComponent(x, y));
+    defender.addComponent(new PositionComponent(x, y));
     
     defender.addComponent(new CollisionComponent(2, false));
     
