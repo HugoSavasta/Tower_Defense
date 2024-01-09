@@ -4,6 +4,10 @@ import {ctx} from "../../scripts/utils.js";
 class CanvasContextFactory {
     constructor(context) {
         this.context = context;
+        if (CanvasContextFactory.instance) {
+            return CanvasContextFactory.instance;
+          }
+          CanvasContextFactory.instance = this;
     }
 
     createDrawImageFunction() {

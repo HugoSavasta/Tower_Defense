@@ -17,10 +17,8 @@ export {canvas, ctx};
 
 
 export class FloatingMessage {
+
     constructor(value, x, y, size, color) {
-        if (FloatingMessage.instance) {
-            return FloatingMessage.instance;
-        }
         this.value = value;
         this.x = x;
         this.y = y;
@@ -44,6 +42,8 @@ export class FloatingMessage {
         ctx.globalAlpha = 1;
     }
 }
+
+
 
 export function handleFloatingMessages() {
     for (let i = 0; i < floatingMessages.length; i++) {
