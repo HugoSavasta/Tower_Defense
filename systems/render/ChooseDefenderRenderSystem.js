@@ -33,11 +33,11 @@ function ChooseDefenderRenderSystem (delta, frame) {
         }
         else if (entity.name === "Choose_plant_2") {
             contextDrawImageFactory(imageComponent.image,
-                0, 0, 21525/21, 1026, positionComponent.x, 15, 334 / 4, 243 / 3)  
+                0, 0, 700, 1026, positionComponent.x, 3, 400 / 4, 300 / 3)  
         }
         else if (entity.name === "Choose_plant_3") {
             contextDrawImageFactory(imageComponent.image,
-                0, 0, 761/2, 274, positionComponent.x, 0, 761 / 9, 274 / 3)
+                0, 0, 700/2, 274, positionComponent.x, 0, 761 / 9, 243 / 3)
         }
        
         contextComponent.context.strokeStyle = 'white';

@@ -136,7 +136,7 @@ function createDefender(type, x, y) {
     }
     else  if(type === 1){
         defender.addComponent(plant2_img);
-        defender.addComponent(new AnimationComponent(0, 0, 0, 20, 21525/21, 1026, 90));
+        defender.addComponent(new AnimationComponent(0, 0, 0, 2, 690, 800, 60));
         defender.addComponent(new DammageComponent(30));
         defender.addComponent(new ShootComponent(true));
         defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(200).build();
