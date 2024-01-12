@@ -1,3 +1,4 @@
+
 class EntityManager {
 
     constructor() {
@@ -20,6 +21,7 @@ class EntityManager {
             console.log("Cannot add undefined entity");
             return;
         }
+     
         if(entity.name === "Defender") {
             this.defenders.set(entity.id, entity);
         } else if(entity.name === "Zombie") {
@@ -46,6 +48,7 @@ class EntityManager {
             console.log("Cannot remove undefined entity");
             return;
         }
+    
         if(entity.name === "Defender") {
             this.defenders.delete(entity.id);
         } else if(entity.name === "Zombie") {

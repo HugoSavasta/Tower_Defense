@@ -1,3 +1,5 @@
+import { FloatingMessage } from "./utils.js";
+import { floatingMessages } from "./constants.js";
 export class Observer {
   constructor(name) {
 
@@ -10,7 +12,7 @@ export class Observer {
   }
 
   notify(eventData) {
-      console.log(`${this.name} received notification:`, eventData);
+    console.log(eventData.message);
   }
 }
 
@@ -34,4 +36,4 @@ class Publisher {
 }
 
 
-export const zombiePublisher = new Publisher();
+export const gamePublisher = new Publisher();

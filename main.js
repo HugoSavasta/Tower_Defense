@@ -1,6 +1,6 @@
 import {ctx, canvas} from "./scripts/utils.js";
+import { gamePublisher, Observer } from "./scripts/Observable.js";
 import {cellSize, cellGap, frame_interval, floatingMessages} from "./scripts/constants.js";
-import { zombiePublisher } from "./scripts/Observable.js";
 import { score, won, setWon, level, incLevel, gameOver, enemiesInterval, decEnemiesInterval,  
     decResource, numberOfResources, FloatingMessage,
    resetGame, handleFloatingMessages, handleGameStatus } from "./scripts/utils.js";
@@ -74,6 +74,8 @@ const systems = [
 
 
 
+gamePublisher.subscribe(new Observer("game"));
+gamePublisher.notifyObservers({ message: "Games Started" });
 
 
 
@@ -83,6 +85,7 @@ mouse.addComponent(new SizeComponent(0.1, 0.1));
 
 let frame = 0
 let previousTime = performance.now();
+
 let delta_time_multiplier = 1;
 let delta_time = 0;
 
@@ -238,10 +241,9 @@ function handleResources() {
         resource.addComponent(new CollisionComponent(1, false));
         resource.addComponent(new TextComponent(amounts[Math.floor(Math.random() * amounts.length)]));
         entityManager.add(resource);
+ 
     }        
 }
-
-
 
 
 
@@ -316,7 +318,7 @@ canvas.addEventListener('click', function() {
                     pos.x, pos.y, 20, 'red'));
                 }
             }
-           
+
         } else {
             floatingMessages.push(new FloatingMessage('Need more resources',
              pos.x, pos.y, 20, 'red'));
