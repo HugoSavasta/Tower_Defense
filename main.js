@@ -3,7 +3,7 @@ import { gamePublisher, Observer } from "./scripts/Observable.js";
 import {cellSize, cellGap, frame_interval, floatingMessages} from "./scripts/constants.js";
 import { score, won, setWon, level, incLevel, gameOver, enemiesInterval, decEnemiesInterval,  
     decResource, numberOfResources, FloatingMessage,
-   resetGame, handleFloatingMessages, handleGameStatus } from "./scripts/utils.js";
+   resetGame, handleFloatingMessages, handleGameStatus, mouse, mouseleave, mousemove } from "./scripts/utils.js";
 
 import Entity from "./scripts/Entity.js";
 import {entityManager} from "./scripts/EntityManager.js";
@@ -75,13 +75,10 @@ const systems = [
 
 
 
-gamePublisher.subscribe(new Observer("game"));
 
 
 
-const mouse = new Entity("Mouse");
-mouse.addComponent(new PositionComponent(0, 0));
-mouse.addComponent(new SizeComponent(0.1, 0.1));
+
 
 let frame = 0
 let previousTime = performance.now();
@@ -126,8 +123,11 @@ entityManager.add(plant3);
 
 function createDefender(type, x, y) {
 
-    if(entityManager.zombies.size === 0) {
-        gamePublisher.notifyObservers({ message: "Game started!" });
+    if(entityManager.defenders.size === 0) {
+        
+        gamePublisher.subscribe(new Observer("game"));
+        gamePublisher.notifyObservers({ message: "Level started!" });
+
     }
 
     const defender = new Entity("Defender");
@@ -204,20 +204,15 @@ function createZombie(x, y) {
     }
 }
 
-let canvasPosition = canvas.getBoundingClientRect();
 
 
 
 
-canvas.addEventListener('mousemove', function (e) {
-    mouse.getComponent("PositionComponent").x = e.x - canvasPosition.left;
-    mouse.getComponent("PositionComponent").y = e.y - canvasPosition.top;
-});
 
-canvas.addEventListener('mouseleave', function () {
-    mouse.getComponent("PositionComponent").x = undefined;
-    mouse.getComponent("PositionComponent").y = undefined;
-});
+
+mousemove.start();
+mouseleave.start();
+
 
 
 document.addEventListener('keydown', (event) => {
@@ -379,11 +374,11 @@ function animate(currentTime) {
         setWon(true);
         incLevel(1);
     }
-
-    if (entityManager.resources.size > 0 && mouse.getComponent("PositionComponent").x && mouse.getComponent("PositionComponent").y){
+    const pos = mouse.getComponent("PositionComponent");
+    if (entityManager.resources.size > 0 && pos.x && pos.y){
         MouseResouceCollisionSystem(
-            mouse.getComponent("PositionComponent").x,
-            mouse.getComponent("PositionComponent").y, 
+            pos.x,
+            pos.y, 
             mouse.getComponent("SizeComponent").width,
             mouse.getComponent("SizeComponent").height
         );
@@ -400,6 +395,7 @@ function animate(currentTime) {
     if (entityManager.zombies.size > 0) {
         handleResources();
     }
+
     requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);

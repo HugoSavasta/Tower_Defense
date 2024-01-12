@@ -17,8 +17,8 @@ class CanvasContext {
     }
 }
 
-const factory = new CanvasContext(ctx);
-const contextDrawImageFactory = factory.createDrawImageFunction();
+const img_class = new CanvasContext(ctx);
+const contextDrawImage = img_class.createDrawImageFunction();
 
 function ChooseDefenderRenderSystem (delta, frame) {
     entityManager.chooses.forEach(entity => {
@@ -32,15 +32,15 @@ function ChooseDefenderRenderSystem (delta, frame) {
 
    
         if (entity.name === "Choose_plant_1") {
-            contextDrawImageFactory(imageComponent.image,
+            contextDrawImage(imageComponent.image,
                 0, 0, 334/2, 243, positionComponent.x, 0, 334 / 4, 243 / 3)
         }
         else if (entity.name === "Choose_plant_2") {
-            contextDrawImageFactory(imageComponent.image,
+            contextDrawImage(imageComponent.image,
                 0, 0, 700, 1026, positionComponent.x, 3, 400 / 4, 300 / 3)  
         }
         else if (entity.name === "Choose_plant_3") {
-            contextDrawImageFactory(imageComponent.image,
+            contextDrawImage(imageComponent.image,
                 0, 0, 700/2, 274, positionComponent.x, 0, 761 / 9, 243 / 3)
         }
        

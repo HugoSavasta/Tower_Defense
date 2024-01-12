@@ -1,5 +1,7 @@
 import {handleGameStatus} from "../../scripts/utils.js";
 import {entityManager} from "../../scripts/EntityManager.js";
+import {gamePublisher} from "../../scripts/Observable.js";
+import AllZombiesStopSoundSystem from "../behaviors/AllZombiesStopSoundSystem.js";
 
 function ZombieBoundaryCollisionSystem () {
     entityManager.zombies.forEach(entity => {
@@ -19,6 +21,10 @@ function ZombieBoundaryCollisionSystem () {
             ) {
                 handleGameStatus(true);
                 if(soundComponent && soundComponent.sound.playing()) soundComponent.sound.stop();
+             
+                gamePublisher.notifyObservers({ message: "Game Over!" });
+                gamePublisher.unsubscribe("game");
+                AllZombiesStopSoundSystem();
             }
         });
 }

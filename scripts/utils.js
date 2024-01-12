@@ -1,8 +1,13 @@
 import { floatingMessages } from "./constants.js";
 import { gamePublisher } from "./Observable.js";
+import Entity from "./Entity.js";
+import PositionComponent from "../components/PositionComponent.js";
+import SizeComponent from "../components/SizeComponent.js";
+
 const canvas = document.getElementById("canvas");
 canvas.width = 900;
 canvas.height = 600;
+const canvasPosition = canvas.getBoundingClientRect();
 const ctx = canvas.getContext("2d");
 
 
@@ -14,45 +19,55 @@ ctx.imageSmoothingEnabled = false;
 
 export {canvas, ctx};
 
-class Factory {
-    // The Factory Method
-    createMessage(type) {
+const mouse = new Entity("Mouse");
+mouse.addComponent(new PositionComponent(0, 0));
+mouse.addComponent(new SizeComponent(0.1, 0.1));
+export {mouse};
+
+class MouseFactory {
+    create(type) {
       switch (type) {
-        case '':
-          return new d();
-        case 'truck':
-          return new Truck();
+        case 'move':
+          return new Move();
+        case 'leave':
+          return new Leave();
         default:
-          throw new Error('Message type not supported');
+          throw new Error('Type not supported');
       }
     }
   }
   
-  // Common interface for all Messages
+
   class Interface {
-    update() {
-      throw new Error('Method "update" must be implemented');
+    start() {
+      throw new Error('Method "start" must be implemented');
     }
   }
   
-  class TestFactory extends Interface {
-    constructor() {
-      super();
+  class Move extends Interface {
+    start() {
+        canvas.addEventListener('mousemove', function (e) {
+            mouse.getComponent("PositionComponent").x = e.x - canvasPosition.left;
+            mouse.getComponent("PositionComponent").y = e.y - canvasPosition.top;
+        });
     }
-  
-    update() {
-      console.log('FloatingMessage update');
-    }
+  }
 
+  class Leave extends Interface {
+    start() {
+        canvas.addEventListener('mouseleave', function () {
+            mouse.getComponent("PositionComponent").x = undefined;
+            mouse.getComponent("PositionComponent").y = undefined;
+        });
+    }
   }
   
-
  
-//   const messageFactory = new Factory();
-  
-//   const car = vehicleFactory.createVehicle('car');
-//   car.startEngine(); 
-  
+const mouseFactory = new MouseFactory();
+const mousemove = mouseFactory.create('move');
+const mouseleave = mouseFactory.create('leave');
+
+export {mousemove, mouseleave};
 
 export class FloatingMessage {
 
@@ -200,7 +215,7 @@ export function handleGameStatus(gO) {
         entityManager.zombies.clear();
         entityManager.resources.clear();
         entityManager.zombies_sound.clear();
-        gamePublisher.notifyObservers({ message: "Game Over!" });
+     
     }
 
     if (won && !gO) {
@@ -221,9 +236,10 @@ export function handleGameStatus(gO) {
         entityManager.zombies_sound.clear();
         entityManager.resources.clear();
       
-        gamePublisher.notifyObservers({ message: "Game won!" });
+      
         document.body.appendChild(temp_canvas2);
         setTimeout(() => {
+          
             const tempCanvases = document.querySelectorAll('#temp_canvas');
             tempCanvases.forEach((canvas) => {
                 canvas.parentNode.removeChild(canvas);
