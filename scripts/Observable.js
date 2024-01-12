@@ -1,5 +1,3 @@
-import { FloatingMessage } from "./utils.js";
-import { floatingMessages } from "./constants.js";
 export class Observer {
   constructor(name) {
 
@@ -8,7 +6,6 @@ export class Observer {
       }
       Observer.instance = this;
       this.name = name;
-      
   }
 
   notify(eventData) {

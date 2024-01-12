@@ -74,8 +74,8 @@ const systems = [
 
 
 
+
 gamePublisher.subscribe(new Observer("game"));
-gamePublisher.notifyObservers({ message: "Games Started" });
 
 
 
@@ -126,13 +126,17 @@ entityManager.add(plant3);
 
 function createDefender(type, x, y) {
 
+    if(entityManager.zombies.size === 0) {
+        gamePublisher.notifyObservers({ message: "Game started" });
+    }
+
     const defender = new Entity("Defender");
 
 
     if(type === 0){
         defender.addComponent(plant_img);
         defender.addComponent(new AnimationComponent(0, 0, 0, 1, 167, 243, 60));
-        defender.addComponent(new DammageComponent(20));
+        defender.addComponent(new DammageComponent(25));
         defender.addComponent(new ShootComponent(true));
         if(defender.getComponent("ShootComponent")){
             defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(210).build();
@@ -142,7 +146,7 @@ function createDefender(type, x, y) {
     else  if(type === 1){
         defender.addComponent(plant2_img);
         defender.addComponent(new AnimationComponent(0, 0, 0, 2, 690, 800, 60));
-        defender.addComponent(new DammageComponent(30));
+        defender.addComponent(new DammageComponent(35));
         defender.addComponent(new ShootComponent(true));
         if(defender.getComponent("ShootComponent")){
             defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(200).build();
@@ -152,7 +156,7 @@ function createDefender(type, x, y) {
     else if(type === 2){
         defender.addComponent(plant3_img);
         defender.addComponent(new AnimationComponent(0, 0, 0, 1, 735/2, 277, 60));
-        defender.addComponent(new DammageComponent(10));
+        defender.addComponent(new DammageComponent(15));
         defender.addComponent(new ShootComponent(true));
         if(defender.getComponent("ShootComponent")){
             defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(190).build();

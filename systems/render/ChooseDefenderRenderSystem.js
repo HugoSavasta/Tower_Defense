@@ -1,13 +1,13 @@
 import {entityManager} from "../../scripts/EntityManager.js";
 import {ctx} from "../../scripts/utils.js";
 
-class CanvasContextFactory {
+class CanvasContext {
     constructor(context) {
         this.context = context;
-        if (CanvasContextFactory.instance) {
-            return CanvasContextFactory.instance;
+        if (CanvasContext.instance) {
+            return CanvasContext.instance;
           }
-          CanvasContextFactory.instance = this;
+          CanvasContext.instance = this;
     }
 
     createDrawImageFunction() {
@@ -17,7 +17,7 @@ class CanvasContextFactory {
     }
 }
 
-const factory = new CanvasContextFactory(ctx);
+const factory = new CanvasContext(ctx);
 const contextDrawImageFactory = factory.createDrawImageFunction();
 
 function ChooseDefenderRenderSystem (delta, frame) {

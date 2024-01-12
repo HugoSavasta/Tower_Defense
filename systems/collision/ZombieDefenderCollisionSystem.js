@@ -33,7 +33,10 @@ function ZombieDefenderCollisionSystem () {
                         velocityComponent.y = 0;
                     }
                     if(dammageComponent === undefined) return;
-                    healthComponent2.health -= 0.01 * dammageComponent.dammage;
+                    let dammage = 0.01 * dammageComponent.dammage;
+                    healthComponent2.health -= dammage
+                    floatingMessages.push(new FloatingMessage(dammage,
+                    positionComponent.x, positionComponent.y, 20, 'red'));
                 }
         });
 

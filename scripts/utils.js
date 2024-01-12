@@ -1,5 +1,5 @@
 import { floatingMessages } from "./constants.js";
-
+import { gamePublisher } from "./Observable.js";
 const canvas = document.getElementById("canvas");
 canvas.width = 900;
 canvas.height = 600;
@@ -14,10 +14,50 @@ ctx.imageSmoothingEnabled = false;
 
 export {canvas, ctx};
 
+class actory {
+    // The Factory Method
+    createMessage(type) {
+      switch (type) {
+        case '':
+          return new d();
+        case 'truck':
+          return new Truck();
+        default:
+          throw new Error('Message type not supported');
+      }
+    }
+  }
+  
+  // Common interface for all Messages
+  class Interface {
+    update() {
+      throw new Error('Method "update" must be implemented');
+    }
+  }
+  
+  class dz extends Message {
+    constructor() {
+      super();
+    }
+  
+    update() {
+      console.log('FloatingMessage update');
+    }
+
+  }
+  
+
+ 
+  const messageFactory = new MessageFactory();
+  
+  const car = vehicleFactory.createVehicle('car');
+  car.startEngine(); 
+  
 
 export class FloatingMessage {
 
     constructor(value, x, y, size, color) {
+        super();
         this.value = value;
         this.x = x;
         this.y = y;
@@ -161,7 +201,7 @@ export function handleGameStatus(gO) {
         entityManager.zombies.clear();
         entityManager.resources.clear();
         entityManager.zombies_sound.clear();
-
+        gamePublisher.notifyObservers({ message: "Game Over!" });
     }
 
     if (won && !gO) {
@@ -182,7 +222,7 @@ export function handleGameStatus(gO) {
         entityManager.zombies_sound.clear();
         entityManager.resources.clear();
       
-        
+        gamePublisher.notifyObservers({ message: "Game won!" });
         document.body.appendChild(temp_canvas2);
         setTimeout(() => {
             const tempCanvases = document.querySelectorAll('#temp_canvas');

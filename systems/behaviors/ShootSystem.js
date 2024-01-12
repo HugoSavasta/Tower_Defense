@@ -41,18 +41,18 @@ function ShootSystem(delta, frame) {
                     dammageComponent = entity.getComponent("DammageComponent");
                 }
 
-                if (dammageComponent.dammage >= 30){
+                if (dammageComponent.dammage >= 35){
                     type = 1;
                     directionX = random_position2.x - positionComponent.x;
                     directionY = random_position2.y - positionComponent.y;
                 }
-                else if(dammageComponent.dammage >= 20){
+                else if(dammageComponent.dammage >= 25){
                    
                     type = 0;
                     directionX = positionComponent2.x - positionComponent.x;
                     directionY = positionComponent2.y - positionComponent.y;
                 }
-                else if(dammageComponent.dammage >= 10){
+                else if(dammageComponent.dammage >= 15){
                     type = 2;
                     directionX = random_position2.x - positionComponent.x;
                     directionY = random_position2.y - positionComponent.y;
