@@ -127,7 +127,7 @@ entityManager.add(plant3);
 function createDefender(type, x, y) {
 
     if(entityManager.zombies.size === 0) {
-        gamePublisher.notifyObservers({ message: "Game started" });
+        gamePublisher.notifyObservers({ message: "Game started!" });
     }
 
     const defender = new Entity("Defender");

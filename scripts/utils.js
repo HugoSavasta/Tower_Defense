@@ -14,7 +14,7 @@ ctx.imageSmoothingEnabled = false;
 
 export {canvas, ctx};
 
-class actory {
+class Factory {
     // The Factory Method
     createMessage(type) {
       switch (type) {
@@ -35,7 +35,7 @@ class actory {
     }
   }
   
-  class dz extends Message {
+  class TestFactory extends Interface {
     constructor() {
       super();
     }
@@ -48,16 +48,15 @@ class actory {
   
 
  
-  const messageFactory = new MessageFactory();
+//   const messageFactory = new Factory();
   
-  const car = vehicleFactory.createVehicle('car');
-  car.startEngine(); 
+//   const car = vehicleFactory.createVehicle('car');
+//   car.startEngine(); 
   
 
 export class FloatingMessage {
 
     constructor(value, x, y, size, color) {
-        super();
         this.value = value;
         this.x = x;
         this.y = y;
