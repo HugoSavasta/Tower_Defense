@@ -226,7 +226,7 @@ document.addEventListener('keydown', (event) => {
   
 
 
-const amounts = [40, 50, 60, 70, 80];
+const amounts = [40, 50, 80];
 
 
 function handleResources() {
@@ -388,11 +388,11 @@ function animate(currentTime) {
         system(delta_time_multiplier, frame);
     });
  
-    handleFloatingMessages();
+   
   
     handleGameStatus(false);
 
-    if (entityManager.defenders.length > 0){
+    if (entityManager.defenders.size > 0){
         handleResources();
     }
 
