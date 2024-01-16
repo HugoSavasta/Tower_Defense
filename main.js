@@ -230,7 +230,7 @@ const amounts = [20, 30, 40];
 
 
 function handleResources() {
-    if (frame % 500 === 0 && !won) {
+    if (frame % 400 === 0 && !won) {
         const resource = new Entity("Resource");
         resource.addComponent(new ContextComponent(ctx));
         resource.addComponent(new SizeComponent(cellSize * 0.6, cellSize * 0.6));
@@ -392,9 +392,7 @@ function animate(currentTime) {
   
     handleGameStatus(false);
 
-    if (entityManager.zombies.size > 0) {
-        handleResources();
-    }
+    handleResources();
 
     requestAnimationFrame(animate);
 }
