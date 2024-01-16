@@ -392,7 +392,9 @@ function animate(currentTime) {
   
     handleGameStatus(false);
 
-    handleResources();
+    if (entityManager.defenders.length > 0){
+        handleResources();
+    }
 
     requestAnimationFrame(animate);
 }
