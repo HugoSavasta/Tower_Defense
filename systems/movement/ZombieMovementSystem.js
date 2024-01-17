@@ -13,9 +13,10 @@ function ZombieMovementSystem (delta, frame) {
     entityManager.zombies.forEach(entity => {
         const positionComponent = entity.getComponent("PositionComponent");
         const velocityComponent = entity.getComponent("VelocityComponent");
+        const collisionComponent = entity.getComponent("CollisionComponent");
         let vx = undefined;
         let vy = undefined;
-        if (tank && tank.getComponent("DammageComponent") && tank.getComponent("DammageComponent").dammage === 15){
+        if (tank && tank.getComponent("DammageComponent") && tank.getComponent("DammageComponent").dammage === 15 && collisionComponent && !collisionComponent.collide){
             const tankPositionComponent = tank.getComponent("PositionComponent");
             if (positionComponent && velocityComponent) {
                 const dx = tankPositionComponent.x - positionComponent.x;
