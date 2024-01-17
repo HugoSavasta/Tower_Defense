@@ -7,7 +7,7 @@ import SizeComponent from "../components/SizeComponent.js";
 const canvas = document.getElementById("canvas");
 canvas.width = 900;
 canvas.height = 600;
-const canvasPosition = canvas.getBoundingClientRect();
+let canvasPosition = canvas.getBoundingClientRect();
 
 window.addEventListener('resize', function () {
     canvasPosition = canvas.getBoundingClientRect();
