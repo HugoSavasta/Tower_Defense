@@ -399,11 +399,3 @@ function animate(currentTime) {
     requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);
-
-
-
-
-window.addEventListener('resize', function () {
-    canvasPosition = canvas.getBoundingClientRect();
-
-});

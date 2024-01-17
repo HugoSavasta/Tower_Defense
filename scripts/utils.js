@@ -8,6 +8,11 @@ const canvas = document.getElementById("canvas");
 canvas.width = 900;
 canvas.height = 600;
 const canvasPosition = canvas.getBoundingClientRect();
+
+window.addEventListener('resize', function () {
+    canvasPosition = canvas.getBoundingClientRect();
+});
+
 const ctx = canvas.getContext("2d");
 
 
