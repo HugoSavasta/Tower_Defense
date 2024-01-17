@@ -141,7 +141,7 @@ function createDefender(type, x, y) {
         if(defender.getComponent("ShootComponent")){
             defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(210).build();
         }
-        defender.addComponent(new HealthComponent(100));
+        defender.addComponent(new HealthComponent(200));
     }
     else  if(type === 1){
         defender.addComponent(plant2_img);
@@ -161,7 +161,7 @@ function createDefender(type, x, y) {
         if(defender.getComponent("ShootComponent")){
             defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(190).build();
         }
-        defender.addComponent(new HealthComponent(300));
+        defender.addComponent(new HealthComponent(500));
     }
       
   
