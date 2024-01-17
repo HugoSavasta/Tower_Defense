@@ -395,6 +395,7 @@ function animate(currentTime) {
     if (entityManager.defenders.size > 0){
         handleResources();
     }
+    handleFloatingMessages();
 
     requestAnimationFrame(animate);
 }
