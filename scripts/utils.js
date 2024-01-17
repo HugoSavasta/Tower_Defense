@@ -104,7 +104,6 @@ export class FloatingMessage {
 
 
 export function handleFloatingMessages() {
-    console.log(floatingMessages.length);
     for (let i = 0; i < floatingMessages.length; i++) {
         floatingMessages[i].update();
         floatingMessages[i].draw();
