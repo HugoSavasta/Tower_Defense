@@ -24,6 +24,10 @@ function ZombieDefenderCollisionSystem () {
                     positionComponent.y < positionComponent2.y + sizeComponent2.height &&
                     positionComponent.y + sizeComponent.height > positionComponent2.y
                   ){
+
+                    velocityComponent.x = entity.getComponent("VelocityComponent").old_x;
+                    velocityComponent.y = entity.getComponent("VelocityComponent").old_y;
+
                     if(healthComponent2 === undefined) {
                         velocityComponent.x = 0;
                         velocityComponent.y = 0;
