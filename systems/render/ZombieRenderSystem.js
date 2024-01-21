@@ -20,16 +20,54 @@ function ZombieRenderSystem (delta, frame) {
         const healthComponent = entity.getComponent("HealthComponent");
         const sizeComponent = entity.getComponent("SizeComponent");
         const imageComponent = entity.getComponent("ImageComponent");
+        const velocityComponent = entity.getComponent("VelocityComponent");
+
+
 
         if (positionComponent === undefined || contextComponent === undefined || 
             animationComponent === undefined ||
              sizeComponent === undefined || imageComponent === undefined) return;
     
-        contextComponent.context.drawImage(imageComponent.image, 
-            animationComponent.frameX * animationComponent.spriteWidth, 0, 
-            animationComponent.spriteWidth, animationComponent.spriteHeight, 
-            positionComponent.x, positionComponent.y, sizeComponent.width, 
-        sizeComponent.height);
+
+
+        if(velocityComponent){
+            console.log(velocityComponent.x);
+            if (velocityComponent.x <= 0) {
+              
+            
+            
+                contextComponent.context.drawImage(imageComponent.image,
+                                                   animationComponent.frameX * animationComponent.spriteWidth, 0,
+                                                   animationComponent.spriteWidth, animationComponent.spriteHeight,
+                                                   positionComponent.x, positionComponent.y, sizeComponent.width,
+                                                   sizeComponent.height);
+               
+            } 
+            else if (velocityComponent.x > 0)
+            {
+
+                contextComponent.context.save();
+            
+ 
+                contextComponent.context.translate(positionComponent.x + sizeComponent.width / 2,
+                                                    positionComponent.y + sizeComponent.height / 2);
+
+                contextComponent.context.scale(-1, 1);
+                contextComponent.context.drawImage(imageComponent.image,
+                                                   animationComponent.frameX * animationComponent.spriteWidth, 0,
+                                                   animationComponent.spriteWidth, animationComponent.spriteHeight,
+                                                   -sizeComponent.width / 2, -sizeComponent.height / 2,
+                                                   sizeComponent.width, sizeComponent.height);
+                contextComponent.context.restore();
+            }
+        }else{
+            contextComponent.context.drawImage(imageComponent.image, 
+                animationComponent.frameX * animationComponent.spriteWidth, 0, 
+                animationComponent.spriteWidth, animationComponent.spriteHeight, 
+                positionComponent.x, positionComponent.y, sizeComponent.width, 
+            sizeComponent.height);
+        }
+ 
 
         
         if (frame % 5 === 0) { 

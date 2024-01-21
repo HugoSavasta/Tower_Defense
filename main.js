@@ -226,7 +226,7 @@ document.addEventListener('keydown', (event) => {
   
 
 
-const amounts = [40, 50, 80];
+const amounts = [40, 50, 60];
 
 
 function handleResources() {

@@ -27,10 +27,11 @@ function ZombieMovementSystem (delta, frame) {
             }
         }
         if( vx && vy ){
-            positionComponent.x += vx * delta;
-            positionComponent.y += vy * delta;
+            velocityComponent.x = vx;
+            velocityComponent.y = vy;
         }
-        else if (positionComponent && velocityComponent) {
+        
+        if (positionComponent && velocityComponent) {
             positionComponent.x += velocityComponent.x * delta;
             positionComponent.y += velocityComponent.y * delta;
         }
