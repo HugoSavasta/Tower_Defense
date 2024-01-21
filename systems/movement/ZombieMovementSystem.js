@@ -29,6 +29,9 @@ function ZombieMovementSystem (delta, frame) {
         if( vx && vy ){
             velocityComponent.x = vx;
             velocityComponent.y = vy;
+        }else{
+            velocityComponent.x = velocityComponent.old_x;
+            velocityComponent.y = velocityComponent.old_y;
         }
         
         if (positionComponent && velocityComponent) {
