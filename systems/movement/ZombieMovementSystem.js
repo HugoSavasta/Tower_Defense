@@ -45,20 +45,32 @@ function ZombieMovementSystem (delta, frame) {
                 positionComponent.y += velocityComponent.y * delta;
             }
         }
-
-        if(orientationComponent){
-            if(vx && vy){
-                if(vx > 0){
+        if(tank){
+            const tankPositionComponent = tank.getComponent("PositionComponent");
+            if(orientationComponent && tankPositionComponent){
+                
+                if(vx && vy){
+                    if(vx >= 0 && tankPositionComponent.x > positionComponent.x){
+                        orientationComponent.x = 1;
+                    }
+                    else if(vx <= -1){
+                        orientationComponent.x = -1;
+                    }
+                }else{
+                    if(velocityComponent.x >= 0 && tankPositionComponent.x > positionComponent.x){
+                        orientationComponent.x = 1;
+                    }
+                    else if(velocityComponent.x <= -1){
+                        orientationComponent.x = -1;
+                    }
+                }
+            }
+        }else{
+            if(orientationComponent){
+                if(velocityComponent.x >= 0){
                     orientationComponent.x = 1;
                 }
-                else if(vx <= 0){
-                    orientationComponent.x = -1;
-                }
-            }else{
-                if(velocityComponent.x > 0){
-                    orientationComponent.x = 1;
-                }
-                else if(velocityComponent.x <= 0){
+                else if(velocityComponent.x <= -1){
                     orientationComponent.x = -1;
                 }
             }
