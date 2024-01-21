@@ -21,7 +21,7 @@ function ZombieRenderSystem (delta, frame) {
         const sizeComponent = entity.getComponent("SizeComponent");
         const imageComponent = entity.getComponent("ImageComponent");
         const velocityComponent = entity.getComponent("VelocityComponent");
-
+        const orientationComponent = entity.getComponent("OrientationComponent");
 
 
         if (positionComponent === undefined || contextComponent === undefined || 
@@ -30,9 +30,9 @@ function ZombieRenderSystem (delta, frame) {
     
 
 
-        if(velocityComponent){
-            console.log(velocityComponent.x);
-            if (velocityComponent.x <= 0) {
+        if(velocityComponent && orientationComponent){
+
+            if (orientationComponent.x < 0) {
               
             
             
@@ -43,7 +43,7 @@ function ZombieRenderSystem (delta, frame) {
                                                    sizeComponent.height);
                
             } 
-            else if (velocityComponent.x > 0)
+            else if (orientationComponent.x > 0)
             {
 
                 contextComponent.context.save();

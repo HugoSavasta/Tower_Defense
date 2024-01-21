@@ -9,13 +9,19 @@ function ZombieMovementSystem (delta, frame) {
             return;
         });
     }
+
+
  
     entityManager.zombies.forEach(entity => {
         const positionComponent = entity.getComponent("PositionComponent");
         const velocityComponent = entity.getComponent("VelocityComponent");
         const collisionComponent = entity.getComponent("CollisionComponent");
+        const orientationComponent = entity.getComponent("OrientationComponent");
         let vx = undefined;
         let vy = undefined;
+        let oldX = velocityComponent.x;
+        let oldY = velocityComponent.y;
+
         if (tank && tank.getComponent("DammageComponent") && tank.getComponent("DammageComponent").dammage === 15 && collisionComponent && !collisionComponent.collide){
             const tankPositionComponent = tank.getComponent("PositionComponent");
             if (positionComponent && velocityComponent) {
@@ -25,20 +31,39 @@ function ZombieMovementSystem (delta, frame) {
                 vx = dx / distance;
                 vy = dy / distance;
             }
-        }
-        if( vx && vy ){
-            velocityComponent.x = vx;
-            velocityComponent.y = vy;
         }else{
-            velocityComponent.x = velocityComponent.old_x;
-            velocityComponent.y = velocityComponent.old_y;
-        }
-        
-        if (positionComponent && velocityComponent) {
-            positionComponent.x += velocityComponent.x * delta;
-            positionComponent.y += velocityComponent.y * delta;
+            velocityComponent.x = oldX;
+            velocityComponent.y = oldY;
         }
 
+        if( vx && vy  && positionComponent){
+            positionComponent.x += vx * delta;
+            positionComponent.y += vy * delta;
+        }else{
+            if (positionComponent && velocityComponent) {
+                positionComponent.x += velocityComponent.x * delta;
+                positionComponent.y += velocityComponent.y * delta;
+            }
+        }
+
+        if(orientationComponent){
+            if(vx && vy){
+                if(vx > 0){
+                    orientationComponent.x = 1;
+                }
+                else if(vx <= 0){
+                    orientationComponent.x = -1;
+                }
+            }else{
+                if(velocityComponent.x > 0){
+                    orientationComponent.x = 1;
+                }
+                else if(velocityComponent.x <= 0){
+                    orientationComponent.x = -1;
+                }
+            }
+        }
+       
     });
 }
 

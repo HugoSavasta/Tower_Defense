@@ -51,6 +51,7 @@ import ShootSystem from "./systems/behaviors/ShootSystem.js";
 import ZombieLifeSystem from "./systems/behaviors/ZombieLifeSystem.js";
 import DefenderLifeSystem from "./systems/behaviors/DefenderLifeSystem.js";
 import ZombieSoundSystem from "./systems/behaviors/ZombieSoundSystem.js";
+import OrientationComponent from "./components/OrientationComponent.js";
 
 
 const systems = [
@@ -189,7 +190,7 @@ function createZombie(x, y) {
     zombie.addComponent(new PositionComponent(x, y));
     let randomSpeed = Math.random() * 1.1 + 1;
     zombie.addComponent(new VelocityComponent(-randomSpeed, 0));
-
+    zombie.addComponent(new OrientationComponent(-1, 1));
     zombie.addComponent(new HealthComponent(100));
    
     zombie.addComponent(new CollisionComponent(2, false));
