@@ -68,7 +68,7 @@ function ZombieMovementSystem (delta, frame) {
         }else{
             if(orientationComponent){
                 if(velocityComponent.x >= 0){
-                    orientationComponent.x = 1;
+                    orientationComponent.x = -1;
                 }
                 else if(velocityComponent.x <= -1){
                     orientationComponent.x = -1;

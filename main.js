@@ -183,7 +183,15 @@ function createZombie(x, y) {
     const zombie = new Entity("Zombie");
 
     zombie.addComponent(new ContextComponent(ctx));
-    zombie.addComponent(new ImageComponent("assets/zombie.png"));
+    if(Math.random() > 0.5){
+        zombie.addComponent(new ImageComponent("assets/zombie.png"));
+        zombie.addComponent(new DammageComponent(10));
+    }else{
+        zombie.addComponent(new ImageComponent("assets/zombie2.png"));
+        zombie.addComponent(new DammageComponent(20));
+    }
+
+
     zombie.addComponent(new AnimationComponent(0, 0, 0, 7, 292, 410, 30));
 
     zombie.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
@@ -194,7 +202,7 @@ function createZombie(x, y) {
     zombie.addComponent(new HealthComponent(100));
    
     zombie.addComponent(new CollisionComponent(2, false));
-    zombie.addComponent(new DammageComponent(10));
+    
 
     //added shoot builder component
     entityManager.add(zombie);
