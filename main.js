@@ -2,7 +2,7 @@ import {ctx, canvas} from "./scripts/utils.js";
 import { gamePublisher, Observer } from "./scripts/Observable.js";
 import {cellSize, cellGap, frame_interval, floatingMessages} from "./scripts/constants.js";
 import { score, won, setWon, level, incLevel, gameOver, enemiesInterval, decEnemiesInterval,  
-    decResource, numberOfResources, FloatingMessage,
+    incResource, decResource, numberOfResources, FloatingMessage,
    resetGame, handleFloatingMessages, handleGameStatus, mouse, mouseleave, mousemove } from "./scripts/utils.js";
 
 import Entity from "./scripts/Entity.js";
@@ -52,6 +52,7 @@ import ZombieLifeSystem from "./systems/behaviors/ZombieLifeSystem.js";
 import DefenderLifeSystem from "./systems/behaviors/DefenderLifeSystem.js";
 import ZombieSoundSystem from "./systems/behaviors/ZombieSoundSystem.js";
 import OrientationComponent from "./components/OrientationComponent.js";
+import ChooseShovelRenderSystem from "./systems/render/ChooseShovelRenderSystem.js";
 
 
 const systems = [
@@ -63,6 +64,7 @@ const systems = [
     ZombieMovementSystem,
     CellRenderSystem,
     ChooseDefenderRenderSystem,
+    ChooseShovelRenderSystem,
     DefenderRenderSystem,
     ProjectileRenderSystem,
     ResourceRenderSystem,
@@ -90,6 +92,7 @@ let delta_time = 0;
 const plant_img = new ImageComponent("assets/plant.png")
 const plant2_img = new ImageComponent("assets/sunflower_shot.png")
 const plant3_img = new ImageComponent("assets/plant3.png")
+const shovel_img = new ImageComponent("assets/Shovel.png")
 
 const plant = new Entity("Choose_plant_1");
 plant.addComponent(new ContextComponent(ctx));
@@ -119,6 +122,14 @@ plant3.addComponent(new CostComponent(300));
 plant3.addComponent(new CollisionComponent());
 entityManager.add(plant3);
 
+const shovel = new Entity("Choose_shovel");
+shovel.addComponent(new ContextComponent(ctx));
+shovel.addComponent(shovel_img);
+shovel.addComponent(new SizeComponent(cellSize - cellGap * 2, cellSize - cellGap * 2));
+shovel.addComponent(new PositionComponent(300, 0));
+shovel.addComponent(new CollisionComponent());
+entityManager.add(shovel);
+
 
 
 
@@ -143,6 +154,7 @@ function createDefender(type, x, y) {
             defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(210).build();
         }
         defender.addComponent(new HealthComponent(200));
+        defender.addComponent(new CostComponent(100));
     }
     else  if(type === 1){
         defender.addComponent(plant2_img);
@@ -153,6 +165,7 @@ function createDefender(type, x, y) {
             defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(200).build();
         }
         defender.addComponent(new HealthComponent(100));
+        defender.addComponent(new CostComponent(200));
     }
     else if(type === 2){
         defender.addComponent(plant3_img);
@@ -163,6 +176,7 @@ function createDefender(type, x, y) {
             defender.getComponent("ShootComponent").setShootNow(true).setShootDelay(190).build();
         }
         defender.addComponent(new HealthComponent(500));
+        defender.addComponent(new CostComponent(300));
     }
       
   
@@ -267,7 +281,7 @@ canvas.addEventListener('click', function() {
         size.width,
         size.height
     );
-   
+
     if(selectedDefender !== null){
         if(choosedDefender.length > 0){
             if(choosedDefender[0].name !== selectedDefender.name){
@@ -282,18 +296,21 @@ canvas.addEventListener('click', function() {
     const gridPositionY = pos.y - (pos.y % cellSize) + cellGap;
     if(gridPositionX === undefined || gridPositionY === undefined) return;
     if(gridPositionY < cellSize) return;
-    if(!MouseDefenderCollisionSystem(
+    const collidedEntity = MouseDefenderCollisionSystem(
         gridPositionX,
         gridPositionY, 
         size.width,
         size.height
-    )) 
+    )
+    if(!collidedEntity) 
     {
 
+   
         let defenderCost = 100;
-        if (numberOfResources >= defenderCost) {
+
+       if (numberOfResources >= defenderCost) {
             const pos = mouse.getComponent("PositionComponent")
-         
+            
             if(choosedDefender.length === 0){
                 floatingMessages.push(new FloatingMessage('Please choose defender',
                 pos.x, pos.y, 20, 'red'));
@@ -331,8 +348,31 @@ canvas.addEventListener('click', function() {
             floatingMessages.push(new FloatingMessage('Need more resources',
              pos.x, pos.y, 20, 'red'));
         }
-    }else{
-        floatingMessages.push(new FloatingMessage('Cell is occupied', pos.x, pos.y, 20, 'red'));
+    }else  {
+        if(choosedDefender.length === 0){
+            floatingMessages.push(new FloatingMessage('Please choose defender',
+            pos.x, pos.y, 20, 'red'));
+            return;
+        }
+        if(choosedDefender[0].name === "Choose_shovel" && collidedEntity){
+            const costComponent = collidedEntity.getComponent("CostComponent");
+            const positionComponent = collidedEntity.getComponent("PositionComponent");
+            if((numberOfResources - costComponent.cost / 50) >= 100){
+           
+             
+                floatingMessages.push(new FloatingMessage('+' + costComponent.cost/2,
+                positionComponent.x, positionComponent.y, 
+                30, 'green'));
+                incResource(parseInt(costComponent.cost/2));
+                entityManager.remove(collidedEntity);
+            }else{
+                floatingMessages.push(new FloatingMessage('You cannot remove it!', pos.x, pos.y, 20, 'red'));
+            }
+
+        }else{
+            floatingMessages.push(new FloatingMessage('Cell is occupied!', pos.x, pos.y, 20, 'red'));
+        }
+
     }
 });
 

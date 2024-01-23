@@ -1,6 +1,8 @@
 import {entityManager} from "../../scripts/EntityManager.js";
+import { incResource, FloatingMessage } from "../../scripts/utils.js";
+import { floatingMessages } from "../../scripts/constants.js";
 
-function MouseDefenderCollisionSystem(mouseX, mouseY, mouseWidth, mouseHeight) {
+function ShovelDefenderCollisionSystem(mouseX, mouseY, mouseWidth, mouseHeight) {
     let collided = false;
     entityManager.defenders.forEach(entity => {
         const collisionComponent = entity.getComponent("CollisionComponent");
@@ -16,10 +18,10 @@ function MouseDefenderCollisionSystem(mouseX, mouseY, mouseWidth, mouseHeight) {
             positionComponent.y + sizeComponent.height < mouseY
          )
         ) {
-        collided = entity;
+        collided = true;
     }
     });
     return collided;
 }
 
-export default MouseDefenderCollisionSystem;
+export default ShovelDefenderCollisionSystem;

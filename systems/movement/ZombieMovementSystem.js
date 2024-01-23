@@ -22,7 +22,8 @@ function ZombieMovementSystem (delta, frame) {
         let oldX = velocityComponent.x;
         let oldY = velocityComponent.y;
 
-        if (tank && tank.getComponent("DammageComponent") && tank.getComponent("DammageComponent").dammage === 15 && collisionComponent && !collisionComponent.collide){
+        if (tank && tank.getComponent("DammageComponent") && 
+        tank.getComponent("DammageComponent").dammage === 15 && collisionComponent && !collisionComponent.collide){
             const tankPositionComponent = tank.getComponent("PositionComponent");
             if (positionComponent && velocityComponent) {
                 const dx = tankPositionComponent.x - positionComponent.x;
@@ -36,15 +37,7 @@ function ZombieMovementSystem (delta, frame) {
             velocityComponent.y = oldY;
         }
 
-        if( vx && vy  && positionComponent){
-            positionComponent.x += vx * delta;
-            positionComponent.y += vy * delta;
-        }else{
-            if (positionComponent && velocityComponent) {
-                positionComponent.x += velocityComponent.x * delta;
-                positionComponent.y += velocityComponent.y * delta;
-            }
-        }
+
         if(tank){
             const tankPositionComponent = tank.getComponent("PositionComponent");
             if(orientationComponent && tankPositionComponent){
@@ -73,6 +66,16 @@ function ZombieMovementSystem (delta, frame) {
                 else if(velocityComponent.x <= -1){
                     orientationComponent.x = -1;
                 }
+            }
+        }
+
+        if( vx && vy  && positionComponent){
+            positionComponent.x += vx * delta;
+            positionComponent.y += vy * delta;
+        }else{
+            if (positionComponent && velocityComponent) {
+                positionComponent.x += velocityComponent.x * delta;
+                positionComponent.y += velocityComponent.y * delta;
             }
         }
        

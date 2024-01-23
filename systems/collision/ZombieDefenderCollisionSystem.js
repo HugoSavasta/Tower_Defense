@@ -1,6 +1,5 @@
 import {entityManager} from "../../scripts/EntityManager.js";
-import {floatingMessages} from "../../scripts/constants.js";
-import { FloatingMessage} from "../../scripts/utils.js";
+
 function ZombieDefenderCollisionSystem () {
 
     entityManager.zombies.forEach(entity => {
@@ -11,6 +10,7 @@ function ZombieDefenderCollisionSystem () {
         const collisionComponent = entity.getComponent("CollisionComponent");
         if (collisionComponent === undefined || positionComponent === undefined 
             || sizeComponent === undefined) return;
+        collisionComponent.collide = false;
         entityManager.defenders.forEach(entity2 => {
                 const healthComponent2 = entity2.getComponent("HealthComponent");
                 const positionComponent2 = entity2.getComponent("PositionComponent");
@@ -41,7 +41,7 @@ function ZombieDefenderCollisionSystem () {
                     let dammage = 0.01 * dammageComponent.dammage;
                     healthComponent2.health -= dammage
                 }else{
-                    collisionComponent.collide = false;
+                    
                 }
         });
 

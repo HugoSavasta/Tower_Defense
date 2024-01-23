@@ -1,5 +1,5 @@
 import { floatingMessages } from "./constants.js";
-import { gamePublisher } from "./Observable.js";
+
 import Entity from "./Entity.js";
 import PositionComponent from "../components/PositionComponent.js";
 import SizeComponent from "../components/SizeComponent.js";
